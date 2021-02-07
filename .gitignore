@@ -1,0 +1,7 @@
+/bin/
+*.bak
+.DS_Store
+/build/
+*.class
+/target/
+/target/classes/*.*
