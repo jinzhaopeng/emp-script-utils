@@ -20,8 +20,8 @@ public class UAes {
 	public final static String PKCS5Padding = "AES/CBC/PKCS5Padding";
 	public final static String NoPadding = "AES/CBC/NoPadding";
 
-	public static String AES_KEY_VALUE;
-	public static String AES_IV_VALUE;
+	private static String AES_KEY_VALUE;
+	private static String AES_IV_VALUE;
 
 	/*
 	 * AES/CBC/NoPadding 要求 密钥必须是16位的；Initialization vector (IV) 必须是16位
@@ -58,7 +58,7 @@ public class UAes {
 	}
 
 	/**
-	 * 获取默认密码的Aes
+	 * 获取默认密码的 AES (aes128cbc)
 	 * 
 	 * @return
 	 * @throws Exception
@@ -103,8 +103,8 @@ public class UAes {
 	/**
 	 * 初始化 key,iv
 	 * 
-	 * @param keyBuf
-	 * @param ivBuf
+	 * @param keyBuf 密码
+	 * @param ivBuf  向量
 	 */
 	private void init(byte[] keyBuf, byte[] ivBuf) {
 		byte[] ivBytes = new byte[16];// IV length: must be 16 bytes long

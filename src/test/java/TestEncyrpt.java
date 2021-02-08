@@ -25,7 +25,7 @@ public class TestEncyrpt extends TestBase {
 		UDes.initDefaultKey("受到老师发了塑料袋封口受到法律", "823482389429");
 		testDes();
 
-		testDes("kslfklssksdfsdflfklsd", "skdsdf");
+		testDes("kslfklssksdfsdflfklsd", "skfsdfksdfksdf");
 
 		UAes.initDefaultKey("受到老师发了塑料袋封口受到法律", "823482389429");
 		testAes();
@@ -36,10 +36,8 @@ public class TestEncyrpt extends TestBase {
 
 	private void testAes(String key, String iv) throws Exception {
 		super.printCaption("AES " + "密码：" + key + ", 向量：" + iv);
-		byte[] keyBytes = key.getBytes();
-		byte[] ivBytes = iv.getBytes();
 
-		UAes aa = new UAes(keyBytes, ivBytes);
+		UAes aa = new UAes(key, iv);
 
 		aa.setMethod(UAes.PKCS7Padding);
 
@@ -48,7 +46,9 @@ public class TestEncyrpt extends TestBase {
 		String bb = aa.encrypt(text);
 		System.out.println(bb);
 
-		String cc = aa.decrypt(bb).trim();
+		UAes aes1 = new UAes(key, "isdfkjskldfisdlfjsdkfsd");
+
+		String cc = aes1.decrypt(bb).trim();
 		System.out.println(cc);
 
 	}

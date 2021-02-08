@@ -15,8 +15,8 @@ import javax.crypto.spec.IvParameterSpec;
  * getDesCode(byte[] byteD)byte[]型的解密
  */
 public class UDes {
-	public static String DES_KEY_VALUE;
-	public static String DES_IV_VALUE;
+	private static String DES_KEY_VALUE;
+	private static String DES_IV_VALUE;
 	private static final String ALGORITHM_DES = "DES/CBC/PKCS5Padding";
 
 	private Key desKey;
