@@ -144,7 +144,7 @@ public class DKIMSigner {
 
 	/**
 	 * 获取 identity
-	 * @return
+	 * @return identity
 	 */
 	public String getIdentity() {
 		return identity;

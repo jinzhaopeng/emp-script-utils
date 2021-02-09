@@ -117,7 +117,7 @@ public class Utils {
 	 * 
 	 * @param t1 时间1
 	 * @param t2 时间2
-	 * @return  t1-t2的间隔毫秒
+	 * @return t1-t2的间隔毫秒
 	 */
 	public static long timeDiffMSeconds(Date t1, Date t2) {
 		return t1.getTime() - t2.getTime();
@@ -147,7 +147,7 @@ public class Utils {
 	 * 
 	 * @param s1          字符
 	 * @param splitString 分割符
-	 * @return
+	 * @return 数组
 	 */
 	public static String[] splitString(String s1, String splitString) {
 		String tmp = "121323@!!~~@aasdas";
@@ -159,6 +159,12 @@ public class Utils {
 		return s2;
 	}
 
+	/**
+	 * 转换为 boolean
+	 * 
+	 * @param v 对象
+	 * @return true/y/yes/是 = true
+	 */
 	public static boolean cvtBool(Object v) {
 		if (v == null)
 			return false;
@@ -180,10 +186,10 @@ public class Utils {
 	}
 
 	/**
-	 * 将字符串转换为数字，并忽略错误
+	 * 将字符串转换为整型，并忽略错误
 	 * 
-	 * @param v
-	 * @return
+	 * @param v 对象
+	 * @return 整型
 	 */
 	public static Integer cvtInteger(String v) {
 		if (v == null) {
@@ -200,6 +206,12 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * 将字符串转换为整数，并忽略错误
+	 * 
+	 * @param v 对象
+	 * @return 如果为null, 返回 0
+	 */
 	public static int cvtInt(String v) {
 		Integer i = cvtInteger(v);
 		if (i == null) {
@@ -211,9 +223,9 @@ public class Utils {
 	/**
 	 * 将数组拼接为字符串
 	 * 
-	 * @param arr
-	 * @param joinString
-	 * @return
+	 * @param arr        字符串数组
+	 * @param joinString 拼接字符串
+	 * @return 数组拼接为字符串
 	 */
 	public static String arrayJoin(String[] arr, String joinString) {
 		if (arr == null || arr.length == 0) {
@@ -230,10 +242,10 @@ public class Utils {
 	}
 
 	/**
-	 * 生成加密字符串
+	 * sha1 摘要
 	 * 
 	 * @param s1 原始字符
-	 * @return 加密字符
+	 * @return sha1 摘要
 	 */
 	public static String createEncryptString(String s1) {
 		try {
@@ -246,10 +258,10 @@ public class Utils {
 	}
 
 	/**
-	 * 取bytes的md5
+	 * 取bytes的md5摘要
 	 * 
-	 * @param bytes
-	 * @return md5字符串
+	 * @param bytes 二进制数组
+	 * @return md5摘要
 	 */
 	public static String md5(byte[] bytes) {
 		try {
@@ -263,10 +275,10 @@ public class Utils {
 	}
 
 	/**
-	 * 取str的md5
+	 * 取str的md5摘要
 	 * 
 	 * @param str 字符串
-	 * @return md5字符串
+	 * @return md5摘要
 	 */
 	public static String md5(String str) {
 		try {
@@ -297,6 +309,12 @@ public class Utils {
 		return sb.toString().toUpperCase();
 	}
 
+	/**
+	 * 转换 hex字符串为二进制
+	 * 
+	 * @param hexs hex字符串
+	 * @return 二进制
+	 */
 	public static byte[] hex2bytes(String hexs) {
 		String stmp = "";
 		byte[] buf = new byte[hexs.length() / 2];
@@ -310,6 +328,12 @@ public class Utils {
 		return buf;
 	}
 
+	/**
+	 * 转换为utf8
+	 * 
+	 * @param s1 iso8859编码字符串
+	 * @return utf8字符串
+	 */
 	public static String getUtf8(String s1) {
 		if (s1 == null)
 			return s1;
@@ -322,6 +346,12 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * 转换为gbk
+	 * 
+	 * @param s1 iso8859编码字符串
+	 * @return gbk字符串
+	 */
 	public static String getGbk(String s1) {
 		if (s1 == null)
 			return s1;
@@ -368,6 +398,13 @@ public class Utils {
 		return sb.toString();
 	}
 
+	/**
+	 * 获取字符串中的参数
+	 * 
+	 * @param sql 字符串
+	 * @param tag 参数前导字符例如 @
+	 * @return 参数表
+	 */
 	public static MListStr getParameters(String sql, String tag) {
 		if (sql == null)
 			return null;
@@ -384,12 +421,26 @@ public class Utils {
 		return rst;
 	}
 
+	/**
+	 * 正则测试
+	 * 
+	 * @param sourceString 字符串
+	 * @param regexString  正则
+	 * @return 测试结果
+	 */
 	public static boolean testString(String sourceString, String regexString) {
 		Pattern pat = Pattern.compile(regexString, Pattern.CASE_INSENSITIVE);
 		Matcher mat = pat.matcher(sourceString);
 		return mat.find();
 	}
 
+	/**
+	 * 分割字符串为数组
+	 * 
+	 * @param sql 字符串
+	 * @param tag 分割标记
+	 * @return 数组
+	 */
 	public static String[] getSqlSplit(String sql, String tag) {
 		Pattern pat = Pattern.compile("\\b" + tag + "\\b", Pattern.CASE_INSENSITIVE);
 
@@ -399,8 +450,8 @@ public class Utils {
 	/**
 	 * 将纯文本转换成input/textarea所需格式
 	 * 
-	 * @param text
-	 * @return
+	 * @param text 文本
+	 * @return input/textarea所需格式
 	 */
 	public static String textToInputValue(String text) {
 		if (text == null) {
@@ -417,7 +468,7 @@ public class Utils {
 	 * 将纯文本转换为HTML
 	 * 
 	 * @param text
-	 * @return
+	 * @return HTML
 	 */
 	public static String textToHtml(String text) {
 		if (text == null) {
@@ -451,8 +502,8 @@ public class Utils {
 	/**
 	 * URLEncoder.encode 文字
 	 * 
-	 * @param text
-	 * @return
+	 * @param text 文字
+	 * @return encode 文字
 	 */
 	public static String textToUrl(String text) {
 		if (text == null) {
@@ -470,8 +521,8 @@ public class Utils {
 	/**
 	 * 生成编码的URL
 	 * 
-	 * @param s
-	 * @return
+	 * @param s 字符串
+	 * @return 编码后的url
 	 */
 	public static String encodeUrl(String s) {
 		if (s == null) {
@@ -519,7 +570,7 @@ public class Utils {
 	 * 
 	 * @param oriValue
 	 * @param timeDiffMinutes
-	 * @return
+	 * @return 新时间（根据oriValue 的 class，创建 JAVA.SQL.TIMESTAMP/java.util.Date)
 	 */
 	public static Object getTimeDiffValue(Object oriValue, int timeDiffMinutes) {
 		if (oriValue == null || timeDiffMinutes == 0) {
@@ -547,6 +598,13 @@ public class Utils {
 		return tnew;
 	}
 
+	/**
+	 * 获取时间格式
+	 * 
+	 * @param t1               时间
+	 * @param dateformatString 格式
+	 * @return 格式后的时间
+	 */
 	public static String getDateString(Timestamp t1, String dateformatString) {
 		Date d1 = new java.util.Date();
 		d1.setTime(t1.getTime());
@@ -556,8 +614,8 @@ public class Utils {
 	/**
 	 * 获取GMT时间表达式
 	 * 
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return GMT时间
 	 */
 	public static String getDateGMTString(Date date) {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("E, dd-MMM-yy HH:mm:ss z", Locale.UK);
@@ -569,8 +627,8 @@ public class Utils {
 	/**
 	 * 获取GMT时间表达式
 	 * 
-	 * @param t1
-	 * @return
+	 * @param t1 时间
+	 * @return GMT时间
 	 */
 	public static String getDateGMTString(Timestamp t1) {
 		Date d1 = new java.util.Date();
@@ -582,8 +640,8 @@ public class Utils {
 	/**
 	 * 获取GMT时间表达式
 	 * 
-	 * @param calendar
-	 * @return
+	 * @param calendar 时间
+	 * @return GMT时间
 	 */
 	public static String getDateGMTString(Calendar calendar) {
 		return getDateGMTString(calendar.getTime());
@@ -594,7 +652,7 @@ public class Utils {
 	 * 返回时间的xml格式，yyyy-mm-ddTHH:MM:SS
 	 * 
 	 * @param t1 时间
-	 * @return
+	 * @return xml格式，yyyy-mm-ddTHH:MM:SS
 	 */
 	public static String getDateXmlString(Object t1) {
 		if (t1 == null) {
@@ -642,9 +700,9 @@ public class Utils {
 	 * 获取指定格式的 日期字符串<br>
 	 * 格式例如 yyyy-MM-dd HH:mm:ss
 	 * 
-	 * @param calendar
+	 * @param calendar         时间
 	 * @param dateformatString （yyyy-MM-dd HH:mm:ss）
-	 * @return
+	 * @return 格式的 日期字符串
 	 */
 	public static String getDateString(Calendar calendar, String dateformatString) {
 		Date d1 = new java.util.Date();
@@ -656,9 +714,9 @@ public class Utils {
 	 * 获取指定格式的 日期字符串<br>
 	 * 格式例如 yyyy-MM-dd HH:mm:ss
 	 * 
-	 * @param date
+	 * @param date             时间
 	 * @param dateformatString （yyyy-MM-dd HH:mm:ss）
-	 * @return
+	 * @return 格式的 日期字符串
 	 */
 	public static String getDateString(Date date, String dateformatString) {
 		// SimpleDateFormat format = null;
@@ -674,8 +732,8 @@ public class Utils {
 	/**
 	 * 获取默认格式 日期 ，例如2011-04-02
 	 * 
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return 默认格式 日期
 	 */
 	public static String getDateString(Date date) {
 		// SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -687,8 +745,8 @@ public class Utils {
 	/**
 	 * 获取默认格式 日期和时间 ，例如 2011-04-02 11:29:31
 	 * 
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return 默认格式 日期和时间
 	 */
 	public static String getDateTimeString(Date date) {
 		/*
@@ -701,8 +759,8 @@ public class Utils {
 	/**
 	 * 获取默认格式 时间 ，例如 11:29:31
 	 * 
-	 * @param date
-	 * @return
+	 * @param date 时间
+	 * @return 默认格式 时间
 	 */
 	public static String getTimeString(Date date) {
 		// SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
@@ -710,48 +768,14 @@ public class Utils {
 		return getDateString(date, "HH:mm:ss");
 	}
 
-	public static String getJavascript(String s1) {
-		return "\r\n<script language=\"javascript\">\r\n" + s1 + "\r\n</script>\r\n";
-	}
-
-	public static String getAlertScript(String s1) {
-		s1 = s1.replaceAll("\r", "\\\\r").replaceAll("'", "\\\\'").replaceAll("\n", "\\\\n");
-		s1 = "alert('" + s1 + "');";
-		return getJavascript(s1);
-	}
-
+	/**
+	 * 获取 UUID
+	 * 
+	 * @return UUID字符串
+	 */
 	public static String getGuid() {
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString();
-	}
-
-	/**
-	 * 获取SELECT的OPTION列表
-	 * 
-	 * @param objectValues ArrayList中的对象
-	 * @param v1           当前值
-	 * @param valueMethod  value的方法名
-	 * @param textMethod   text的方法名
-	 * @return
-	 */
-	public static String getOptions(ArrayList<?> objectValues, String v1, String valueMethod, String textMethod) {
-		StringBuilder tmp = new StringBuilder();
-		// ObjectValue ov = new ObjectValue();
-		// tmp.append("<option value=''>请选择</option>\r\n");
-		// for (int i = 0; i < objectValues.size(); i++) {
-		// Object obj = objectValues.get(i);
-		// ov.setObject(obj);
-		// String val = textToInputValue(ov.getValue(valueMethod));
-		// String text = textToInputValue(ov.getValue(textMethod));
-		// if (v1.toUpperCase().trim().equals(val.trim().toUpperCase())) {
-		// tmp.append("<option value=\"" + val + "\" selected>" + text
-		// + "</option>\r\n");
-		// } else {
-		// tmp.append("<option value=\"" + val + "\">" + text
-		// + "</option>\r\n");
-		// }
-		// }
-		return tmp.toString();
 	}
 
 	/**
@@ -799,7 +823,7 @@ public class Utils {
 	 * 
 	 * @param date1
 	 * @param date2
-	 * @return
+	 * @return 两个日期之间的天数
 	 */
 	public static int getDays(Date date1, Date date2) {
 		long days = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000);
@@ -829,9 +853,9 @@ public class Utils {
 	/**
 	 * 根据字符返回日期
 	 * 
-	 * @param dateString
-	 * @param dateFormat
-	 * @return
+	 * @param dateString 日期字符串
+	 * @param dateFormat 日期格式
+	 * @return 日期
 	 */
 	public static Date getDate(String dateString, String dateFormat) {
 		// yyyy-MM-dd HH:mm:ss;
@@ -858,12 +882,12 @@ public class Utils {
 	}
 
 	/**
-	 * 获取sql的timestamp数据
+	 * 获取sql的timestamp
 	 * 
 	 * @param s1         日期字符串
 	 * @param lang       语言
 	 * @param isUKFormat 当lang=enus时,是否为英式
-	 * @return
+	 * @return sql的timestamp
 	 */
 	public static java.sql.Timestamp getTimestamp(String s1, String lang, boolean isUKFormat) {
 		if (s1 == null || s1.trim().length() == 0) {
@@ -919,7 +943,7 @@ public class Utils {
 	 * 计算显示的宽度
 	 * 
 	 * @param s1 字符串
-	 * @return
+	 * @return 显示的宽度
 	 */
 	public static int getDisplayWidth(String s1) {
 		if (s1 == null || s1.length() < 2)
@@ -956,7 +980,7 @@ public class Utils {
 	 * @param source 源
 	 * @param find1  开始查找的字符串
 	 * @param find2  后面查找的字符串
-	 * @return
+	 * @return 删除字符串中的内容
 	 */
 	public static String deleteStr(String source, String find1, String find2) {
 		if (source == null)
@@ -978,8 +1002,8 @@ public class Utils {
 	 * 
 	 * 基本功能：过滤所有以"<"开头以">"结尾的标签
 	 * 
-	 * @param str
-	 * @return String
+	 * @param str 字符串
+	 * @return String 过滤后的结果
 	 */
 	public static String filterHtml(String str) {
 		String regxpForHtml = "<([^>]*)>"; // 过滤所有以<开头以>结尾的标签

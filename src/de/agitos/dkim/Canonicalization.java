@@ -111,7 +111,7 @@ public class Canonicalization {
 	/**
 	 * simple/relaxed
 	 * 
-	 * @return
+	 * @return simple/relaxed
 	 */
 	public String getType() {
 		return "unknown";
@@ -122,7 +122,7 @@ public class Canonicalization {
 	 * 
 	 * @param name
 	 * @param value
-	 * @return
+	 * @return 字符串
 	 */
 	public String canonicalizeHeader(String name, String value) {
 		return null;
@@ -132,7 +132,7 @@ public class Canonicalization {
 	 * 规范化邮件体
 	 * 
 	 * @param body 邮件体
-	 * @return
+	 * @return 规范化邮件体
 	 * @throws IOException
 	 */
 	public String canonicalizeBody(String body) throws IOException {

@@ -34,7 +34,7 @@ public class UXml {
 	 * 过滤非法的字符 0x00 - 0x08 ,0x0b - 0x0c ,0x0e - 0x1f
 	 * 
 	 * @param xmlStr
-	 * @return
+	 * @return 过滤后的xml
 	 */
 	public static String filterInvalidXMLcharacter(String xmlStr) {
 		if (xmlStr == null || xmlStr.length() == 0) {
@@ -60,7 +60,7 @@ public class UXml {
 	 * @param findAttr     检查的属性名称
 	 * @param checkValue   检测值
 	 * @param isIgnoreCase 是否大小写匹配
-	 * @return
+	 * @return 节点
 	 */
 	public static Element findNode(Element fromNode, String findTag, String findAttr, String checkValue,
 			boolean isIgnoreCase) {
@@ -86,7 +86,7 @@ public class UXml {
 	 * 生成可Xml节点值
 	 * 
 	 * @param s1
-	 * @return
+	 * @return 节点值
 	 */
 	public static String createXmlValue(String s1) {
 		if (s1 == null)
@@ -155,7 +155,7 @@ public class UXml {
 			} catch (Exception e) {
 				throw new IOException("解码出错!(" + fencode.getAbsolutePath());
 			}
-			
+
 			xml = UXml.filterInvalidXMLcharacter(xml);
 			doc = asDocument(xml);
 		} else {
@@ -264,7 +264,7 @@ public class UXml {
 	 * 
 	 * @param node    node对象
 	 * @param tagName 下级节点表达式，例如 aa/bb/cc，返回 aa>bb>cc
-	 * @return
+	 * @return 下级节点
 	 */
 	public static Node retNode(Node node, String tagName) {
 		return retNode((Element) node, tagName);
@@ -275,7 +275,7 @@ public class UXml {
 	 * 
 	 * @param document
 	 * @param tagName  下级节点表达式，例如 aa/bb/cc，返回 aa>bb>cc
-	 * @return
+	 * @return 下级节点
 	 */
 	public static Node retNode(Document document, String tagName) {
 		if (document == null)
@@ -288,7 +288,7 @@ public class UXml {
 	 * 
 	 * @param element
 	 * @param tagName 下级节点表达式，例如 aa/bb/cc，返回 aa>bb>cc
-	 * @return
+	 * @return 下级节点
 	 */
 	public static Node retNode(Element element, String tagName) {
 		NodeList nl = retNodeList(element, tagName);
@@ -353,9 +353,9 @@ public class UXml {
 	/**
 	 * 返回节点列表通过路径
 	 * 
-	 * @param node
-	 * @param tagPath
-	 * @return
+	 * @param node    父节点
+	 * @param tagPath 下级节点表达式，例如 aa/bb/cc，返回 aa>bb>cc
+	 * @return 节点列表
 	 */
 	public static NodeList retNodeListByPath(Node node, String tagPath) {
 		return retNodeListByPath((Element) node, tagPath);
@@ -367,7 +367,7 @@ public class UXml {
 	 * @param document
 	 * @param newChilid
 	 * @param tagPathParent
-	 * @return
+	 * @return 是否成功
 	 */
 	public static boolean addNode(Document document, Element newChilid, String tagPathParent) {
 		Node parentNode = retNodeListByPath(document, tagPathParent).item(0);
@@ -384,7 +384,7 @@ public class UXml {
 	 * @param tagPath
 	 * @param nodeAttribute
 	 * @param attValue
-	 * @return
+	 * @return 是否成功
 	 */
 	public static boolean removeNode(Document document, String tagPath, String nodeAttribute, String attValue) {
 		NodeList nodes = retNodeListByPath(document, tagPath);
@@ -535,7 +535,7 @@ public class UXml {
 	 * 将xml字符串转换为 node
 	 * 
 	 * @param xmlSource
-	 * @return
+	 * @return node
 	 */
 	public static Node asNode(String xmlSource) {
 		Document doc = asDocument(xmlSource);
@@ -629,8 +629,8 @@ public class UXml {
 	 * 生成空文件
 	 * 
 	 * @param dtd   dtd文件
-	 * @param qName
-	 * @return
+	 * @param qName qName
+	 * @return Document
 	 */
 	public static Document createBlankDocument(String dtd, String qName) {
 		DocumentBuilderFactory factory = getDocumentBuilder();

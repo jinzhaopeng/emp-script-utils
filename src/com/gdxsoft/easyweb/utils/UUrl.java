@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Url工具类，添加删除参数等
+ * 
  * @author guolei
  *
  */
@@ -26,6 +28,11 @@ public class UUrl {
 		names_ = new HashMap<String, String>();
 	}
 
+	/**
+	 * 初始化
+	 * 
+	 * @param request HttpServletRequest
+	 */
 	public UUrl(HttpServletRequest request) {
 		request_ = request;
 		params_ = new HashMap<String, String>();
@@ -36,7 +43,7 @@ public class UUrl {
 	/**
 	 * 获取参数表达式
 	 * 
-	 * @return
+	 * @return 参数表达式
 	 */
 	public String getParameters() {
 		StringBuilder sb = new StringBuilder();
@@ -60,7 +67,7 @@ public class UUrl {
 	/**
 	 * 获取url，不包含域名
 	 * 
-	 * @return
+	 * @return 获取url，不包含域名
 	 */
 	public String getUrl() {
 		return this.getUrl(true);
@@ -70,7 +77,7 @@ public class UUrl {
 	 * 获取url，不包含域名
 	 * 
 	 * @param includeQuery 是否包含QueryString
-	 * @return
+	 * @return 获取url，不包含域名
 	 */
 	public String getUrl(boolean includeQuery) {
 		StringBuilder sb = new StringBuilder();
@@ -91,7 +98,7 @@ public class UUrl {
 	/**
 	 * 获取完整的url，包含域名与协议和QueryString
 	 * 
-	 * @return
+	 * @return 获取完整的url
 	 */
 	public String getUrlWithDomain() {
 		return this.getUrlWithDomain(true);
@@ -101,7 +108,7 @@ public class UUrl {
 	 * 获取完整的url，包含域名与协议
 	 * 
 	 * @param includeQuery 是否包含QueryString
-	 * @return
+	 * @return 获取完整的url
 	 */
 	public String getUrlWithDomain(boolean includeQuery) {
 		StringBuilder sb = new StringBuilder();
@@ -132,7 +139,7 @@ public class UUrl {
 	 * 删除参数
 	 * 
 	 * @param name 名称
-	 * @return
+	 * @return 是否删除
 	 */
 	public boolean remove(String name) {
 		String name1 = name.toUpperCase().trim();
@@ -146,6 +153,9 @@ public class UUrl {
 		}
 	}
 
+	/**
+	 * 初始化
+	 */
 	private void init() {
 		if (request_ == null) {
 			return;
@@ -198,6 +208,11 @@ public class UUrl {
 		}
 	}
 
+	/**
+	 * HttpServletRequest
+	 * 
+	 * @return HttpServletRequest
+	 */
 	public HttpServletRequest getRequest_() {
 		return request_;
 	}
@@ -205,7 +220,7 @@ public class UUrl {
 	/**
 	 * 域名和协议，结尾以 '/'结束
 	 * 
-	 * @return
+	 * @return 域名和协议，结尾以 '/'结束
 	 */
 	public String getRoot() {
 		return root_;
@@ -214,7 +229,7 @@ public class UUrl {
 	/**
 	 * 域名和协议，结尾不包含 '/'
 	 * 
-	 * @return
+	 * @return 域名和协议，结尾不包含 '/'
 	 */
 	public String getRoot0() {
 		return root0_;
@@ -240,7 +255,7 @@ public class UUrl {
 	/**
 	 * 路径
 	 * 
-	 * @return
+	 * @return 路径
 	 */
 	public String getPath() {
 		return path_;
@@ -249,25 +264,25 @@ public class UUrl {
 	/**
 	 * 路径
 	 * 
-	 * @param path
+	 * @param path 路径
 	 */
 	public void setPath(String path) {
 		this.path_ = path;
 	}
 
 	/**
-	 * jsp文件
+	 * 文件名称
 	 * 
-	 * @return
+	 * @return 文件名称
 	 */
 	public String getName() {
 		return name_;
 	}
 
 	/**
-	 * jsp文件
+	 * 文件名称
 	 * 
-	 * @param name
+	 * @param name 文件名称
 	 */
 	public void setName(String name) {
 		this.name_ = name;
@@ -276,7 +291,7 @@ public class UUrl {
 	/**
 	 * 参数表
 	 * 
-	 * @return
+	 * @return 参数表
 	 */
 	public Map<String, String> getParams() {
 		return params_;
@@ -285,7 +300,7 @@ public class UUrl {
 	/**
 	 * 参数名称，大写
 	 * 
-	 * @return
+	 * @return 参数名称，大写
 	 */
 	public Map<String, String> getNames() {
 		return names_;
