@@ -230,7 +230,18 @@ public class UAes {
 	public String decrypt(String base64Encrypt) throws Exception {
 		return this.decrypt(base64Encrypt, "UTF8");
 	}
-
+	
+	/**
+	 * 解密 以String密文输入
+	 * @param byteMi 密文
+	 * @return 明文 UTF8
+	 * @throws Exception
+	 */
+	public String decrypt(byte[] byteMi) throws Exception {
+		byte[] byteMing = this.decryptBytes(byteMi);
+		String strMing = new String(byteMing, "UTF8");
+		return strMing;
+	}
 	/**
 	 * 解密 以String密文输入,String明文输出
 	 * 
