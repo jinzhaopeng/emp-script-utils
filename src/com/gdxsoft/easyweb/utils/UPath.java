@@ -32,7 +32,7 @@ public class UPath {
 	/**
 	 * 获取邮件DKIM签名的配置
 	 * 
-	 * @return
+	 * @return 邮件DKIM签名的配置
 	 */
 	public static HashMap<String, DKIMCfg> getDKIM_CFGS() {
 		initPath();
@@ -42,7 +42,7 @@ public class UPath {
 	/**
 	 * 放到 RequestValue 的全局变量
 	 * 
-	 * @return
+	 * @return RequestValue 的全局变量
 	 */
 	public static HashMap<String, String> getRV_GLOBALS() {
 		initPath();
@@ -54,7 +54,7 @@ public class UPath {
 	/**
 	 * 定义RequestValue的初始化类型，例如： USR_ID->int
 	 * 
-	 * @return
+	 * @return 定义RequestValue的初始化类型
 	 */
 	public static HashMap<String, String> getRvTypes() {
 		initPath();
@@ -128,7 +128,7 @@ public class UPath {
 	/**
 	 * 合法的域名，用于合并css，js的合法域名检查，避免跨域攻击
 	 * 
-	 * @return
+	 * @return 合法的域名
 	 */
 	public static MTableStr getVALID_DOMAINS() {
 		initPath();
@@ -138,8 +138,8 @@ public class UPath {
 	/**
 	 * 检查是否为合法域名
 	 * 
-	 * @param domain
-	 * @return
+	 * @param domain 域名
+	 * @return 是否合法
 	 */
 	public static boolean checkIsValidDomain(String domain) {
 		MTableStr map = getVALID_DOMAINS();
@@ -176,7 +176,7 @@ public class UPath {
 	/**
 	 * 是否Web加载
 	 * 
-	 * @return
+	 * @return 是否Web加载
 	 */
 	public static boolean isWebCall() {
 		initPath();
@@ -204,7 +204,7 @@ public class UPath {
 	/**
 	 * 获取 ImageMagick的可执行目录(bin)
 	 * 
-	 * @return
+	 * @return ImageMagick的可执行目录(bin)
 	 */
 	public static String getCVT_IMAGEMAGICK_HOME() {
 		initPath();
@@ -231,7 +231,7 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统配置目录
 	 * 
-	 * @return
+	 * @return 获取EMP SCRIPT的系统配置目录
 	 */
 	public static String getConfigPath() {
 		initPath();
@@ -241,7 +241,7 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统描述目录
 	 * 
-	 * @return
+	 * @return 获取EMP SCRIPT的系统描述目录
 	 */
 	public static String getScriptPath() {
 		initPath();
@@ -251,8 +251,9 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统管理目录
 	 * 
-	 * @return
+	 * @return EMP SCRIPT的系统管理目录
 	 */
+	@Deprecated
 	public static String getManagementPath() {
 		initPath();
 		return PATH_MANAGMENT;
@@ -261,7 +262,7 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统的BIN目录
 	 * 
-	 * @return
+	 * @return EMP SCRIPT的系统的BIN目录
 	 */
 	public static String getRealPath() {
 		initPath();
@@ -271,8 +272,9 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统的Database目录
 	 * 
-	 * @return
+	 * @return EMP SCRIPT的系统的Database目录
 	 */
+	@Deprecated
 	public static String getSystemDbPath() {
 		initPath();
 		return SYSTEM_DB_PATH;
@@ -281,8 +283,9 @@ public class UPath {
 	/**
 	 * 获取EMP SCRIPT的系统的Database密码
 	 * 
-	 * @return
+	 * @return EMP SCRIPT的系统的Database密码
 	 */
+	@Deprecated
 	public static String getSystemDbPassword() {
 		initPath();
 		return SYSTEM_DB_PASSWORD;
@@ -290,6 +293,8 @@ public class UPath {
 
 	/**
 	 * 项目路径
+	 * 
+	 * @return 项目路径
 	 */
 	public static String getProjectPath() {
 		return getConfigPath() + "/projects/";
@@ -298,7 +303,7 @@ public class UPath {
 	/**
 	 * 获取组件生产和导入目录
 	 * 
-	 * @return
+	 * @return 获取组件生产和导入目录
 	 */
 	public static String getGroupPath() {
 		initPath();
@@ -308,7 +313,7 @@ public class UPath {
 	/**
 	 * 获取用于Cache文件的目录
 	 * 
-	 * @return
+	 * @return 用于Cache文件的目录
 	 */
 	public static String getCachedPath() {
 		initPath();
@@ -318,7 +323,7 @@ public class UPath {
 	/**
 	 * 获取ewa_conf.xml的 document对象
 	 * 
-	 * @return
+	 * @return ewa_conf.xml的 document对象
 	 */
 	public static Document getCfgXmlDoc() {
 		initPath();
@@ -717,8 +722,8 @@ public class UPath {
 	/**
 	 * 获取初始化参数
 	 * 
-	 * @param name
-	 * @return
+	 * @param name 初始化参数名称
+	 * @return 初始化参数
 	 */
 	public static String getInitPara(String name) {
 		if (name == null) {
@@ -765,7 +770,7 @@ public class UPath {
 	/**
 	 * 获取项目WebRoot所在的物理目录
 	 * 
-	 * @return
+	 * @return WebRoot所在的物理目录
 	 */
 	public static String getRealContextPath() {
 		String s1 = getRealPath();
@@ -835,13 +840,18 @@ public class UPath {
 	/**
 	 * 获取可用进行DEBUG的IP地址
 	 * 
-	 * @return
+	 * @return 可用进行DEBUG的IP地址
 	 */
 	public static MTableStr getDebugIps() {
 		initPath();
 		return DEBUG_IPS;
 	}
 
+	/**
+	 * IS_DEBUG_SQL
+	 * 
+	 * @return IS_DEBUG_SQL
+	 */
 	public static boolean isDebugSql() {
 		initPath();
 		return IS_DEBUG_SQL;
@@ -851,7 +861,7 @@ public class UPath {
 	 * 获取上传文件物理路径<br>
 	 * Name="img_tmp_path"，如果ewa_conf中没有配置的话，则为当前WEB所住目录
 	 * 
-	 * @return
+	 * @return 上传文件物理路径
 	 */
 	public static String getPATH_UPLOAD() {
 		initPath();
@@ -866,7 +876,7 @@ public class UPath {
 	 * des="图片缩略图保存根路径URL, ！！！需要在Tomcat或Apache或Nginx中配置虚拟路径！！！。"
 	 * Name="img_tmp_path_url"，如果ewa_conf中没有配置的话，则为null
 	 * 
-	 * @return
+	 * @return 上传文件的Url
 	 */
 	public static String getPATH_UPLOAD_URL() {
 		initPath();
@@ -880,7 +890,7 @@ public class UPath {
 	/**
 	 * 获取图片临时文件路径
 	 * 
-	 * @return
+	 * @return 临时文件路径
 	 */
 	public static String getPATH_IMG_CACHE() {
 		initPath();
@@ -895,7 +905,7 @@ public class UPath {
 	 * des="图片缩略图保存根路径URL, ！！！需要在Tomcat或Apache或Nginx中配置虚拟路径！！！。"
 	 * Name="img_tmp_path_url"，如果ewa_conf中没有配置的话，则取当前contextpath
 	 * 
-	 * @return
+	 * @return 临时文件Url
 	 */
 	public static String getPATH_IMG_CACHE_URL() {
 		initPath();
@@ -908,7 +918,7 @@ public class UPath {
 	/**
 	 * 获取 配置文件缓存的模式，内存或sqlcached
 	 * 
-	 * @return
+	 * @return 配置文件缓存的模式，内存或sqlcached
 	 */
 	public static String getCfgCacheMethod() {
 		initPath();

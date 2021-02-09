@@ -36,7 +36,7 @@ public class UDes {
 	/**
 	 * 获取默认实例
 	 * 
-	 * @return
+	 * @return 实例
 	 * @throws Exception
 	 */
 	public synchronized static UDes getInstance() throws Exception {

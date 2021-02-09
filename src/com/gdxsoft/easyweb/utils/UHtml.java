@@ -18,7 +18,6 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 public class UHtml {
 
 	private static String CACHE_FILE;
@@ -48,12 +47,9 @@ public class UHtml {
 	/**
 	 * 将单元文件进行合并，例如js文件或css文件等
 	 * 
-	 * @param path
-	 *            路径
-	 * @param ext
-	 *            扩展名
-	 * @param savePathAndName
-	 *            保存路径
+	 * @param path            路径
+	 * @param ext             扩展名
+	 * @param savePathAndName 保存路径
 	 * @return 0表示目录不存在
 	 * @throws Exception
 	 */
@@ -127,10 +123,10 @@ public class UHtml {
 	 * 
 	 * @param path
 	 * @param ext
-	 * @return
+	 * @return 压缩后的文件 .min
 	 */
 	public static JSONObject compressCode(String path, String ext) {
-		JSONObject rst=new JSONObject();
+		JSONObject rst = new JSONObject();
 		if (ext == null) {
 			rst.put("RST", false);
 			rst.put("ERR_CODE", 1);
@@ -156,10 +152,10 @@ public class UHtml {
 		sbf.append(f.getAbsolutePath());
 		int code = sbf.toString().hashCode();
 		if (MAP_COMBINE_FILES.containsKey(id) && MAP_COMBINE_FILES.get(id) == code) {
-				rst.put("RST", true);
-				rst.put("SUCESS_CODE", 1);
-				rst.put("MSG", "NO CHANGE");
-				return rst;
+			rst.put("RST", true);
+			rst.put("SUCESS_CODE", 1);
+			rst.put("MSG", "NO CHANGE");
+			return rst;
 		}
 
 		String line = null;
@@ -220,32 +216,35 @@ public class UHtml {
 		}
 
 	}
+
 	/**
 	 * 获取提交的无参数模式的内容
+	 * 
 	 * @param request
-	 * @return
+	 * @return 内容
 	 * @throws IOException
 	 */
 	public static String getHttpBody(javax.servlet.http.HttpServletRequest request) throws IOException {
-		byte[] bytes = new byte[1024 * 1024];  
-        InputStream is = request.getInputStream();  
+		byte[] bytes = new byte[1024 * 1024];
+		InputStream is = request.getInputStream();
 
-        int nRead = 1;  
-        int nTotalRead = 0;  
-        while (nRead > 0) {  
-            nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);  
-            if (nRead > 0)  
-                nTotalRead = nTotalRead + nRead;  
-        }  
-        String str = new String(bytes, 0, nTotalRead, "utf-8");  
-        //System.out.println("Str:" + str); 
+		int nRead = 1;
+		int nTotalRead = 0;
+		while (nRead > 0) {
+			nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+			if (nRead > 0)
+				nTotalRead = nTotalRead + nRead;
+		}
+		String str = new String(bytes, 0, nTotalRead, "utf-8");
+		// System.out.println("Str:" + str);
 		return str;
 	}
+
 	/**
 	 * 获取Http的Base
 	 * 
 	 * @param request
-	 * @return
+	 * @return Http的Base
 	 */
 	public static String getHttpBase(javax.servlet.http.HttpServletRequest request) {
 		String port = ":" + request.getServerPort();
@@ -278,9 +277,8 @@ public class UHtml {
 	 * 获取Http的Base
 	 * 
 	 * @param request
-	 * @param baseAdd
-	 *            附加的地址
-	 * @return
+	 * @param baseAdd 附加的地址
+	 * @return Http的Base
 	 */
 	public static String getHttpBase(javax.servlet.http.HttpServletRequest request, String baseAdd) {
 
@@ -299,7 +297,7 @@ public class UHtml {
 	 * 去除html的 on事件 例如 onclick,onmousedown ..., 用于Html编辑器粘贴后去除
 	 * 
 	 * @param html
-	 * @return
+	 * @return 去除html的 on事件 例如 onclick,onmousedown ..., 用于Html编辑器粘贴后去除
 	 */
 	public static String removeHtmlEvents(String html) {
 		if (html == null || html.length() == 0) {
@@ -337,7 +335,7 @@ public class UHtml {
 	 * 去除html标签属性(保留图片的src路径)
 	 * 
 	 * @param html
-	 * @return
+	 * @return 去除html标签属性(保留图片的src路径)
 	 */
 	public static String removeHtmlAttributes(String html) {
 		if (html == null || html.length() == 0) {
@@ -367,9 +365,8 @@ public class UHtml {
 	 * 去除html的 标签 例如 iframe script ..., 用于Html编辑器粘贴后去除
 	 * 
 	 * @param html
-	 * @param tagName
-	 *            标签 例如 iframe script
-	 * @return
+	 * @param tagName 标签 例如 iframe script
+	 * @return 去除html的 标签 例如 iframe script ..., 用于Html编辑器粘贴后去除
 	 */
 	public static String removeHtmlTag(String html, String tagName) {
 		if (html == null || html.length() == 0) {
@@ -401,19 +398,14 @@ public class UHtml {
 		return html;
 	}
 
-
 	/**
 	 * 创建类似BBS类型的分页
 	 * 
-	 * @param iCurPage
-	 *            当前页
-	 * @param iPageSize
-	 *            每页记录数
-	 * @param iTotalRecords
-	 *            总记录数
-	 * @param pageUrlRoot
-	 *            连接表达式 例如：../bbs/xxx/yy/{EXP}.html {EXP}是页码替换
-	 * @return
+	 * @param iCurPage      当前页
+	 * @param iPageSize     每页记录数
+	 * @param iTotalRecords 总记录数
+	 * @param pageUrlRoot   连接表达式 例如：../bbs/xxx/yy/{EXP}.html {EXP}是页码替换
+	 * @return 分页
 	 */
 	public static String createListSplit(int iCurPage, int iPageSize, int iTotalRecords, String pageUrlRoot) {
 		if (iTotalRecords <= iPageSize) {
@@ -474,15 +466,11 @@ public class UHtml {
 	/**
 	 * 创建类似BBS类型的分页(table输出，兼容IE6)
 	 * 
-	 * @param iCurPage
-	 *            当前页
-	 * @param iPageSize
-	 *            每页记录数
-	 * @param iTotalRecords
-	 *            总记录数
-	 * @param pageUrlRoot
-	 *            连接表达式 例如：../bbs/xxx/yy/{EXP}.html {EXP}是页码替换
-	 * @return
+	 * @param iCurPage      当前页
+	 * @param iPageSize     每页记录数
+	 * @param iTotalRecords 总记录数
+	 * @param pageUrlRoot   连接表达式 例如：../bbs/xxx/yy/{EXP}.html {EXP}是页码替换
+	 * @return 分页
 	 */
 	public static String createListSplitTable(int iCurPage, int iPageSize, int iTotalRecords, String pageUrlRoot) {
 		if (iTotalRecords <= iPageSize) {

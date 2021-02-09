@@ -95,15 +95,46 @@ public class UNet {
 	// 限制最大Redirect次数
 	private int _LimitRedirectInc = 7;
 
+	private String _Encode; // 字符集
+	private URL _ReturnUrl;
+
+	public UNet() {
+		this._Headers = new HashMap<String, String>();
+		_Cookies = new HashMap<String, String>();
+
+		this._CookieStore = new BasicCookieStore();
+	}
+
+	/**
+	 * 初始化
+	 * 
+	 * @param cookie      cookie字符串
+	 * @param charsetName 字符集
+	 */
+	public UNet(String cookie, String charsetName) {
+		this._Headers = new HashMap<String, String>();
+		_Cookies = new HashMap<String, String>();
+
+		this._Cookie = cookie;
+		this._Encode = charsetName;
+		this.initCookies();
+
+	}
+
 	/**
 	 * 获取 CookieStore
 	 * 
-	 * @return
+	 * @return BasicCookieStore
 	 */
 	public BasicCookieStore getCookieStore() {
 		return _CookieStore;
 	}
 
+	/**
+	 * cookie转换为 JSONArray
+	 * 
+	 * @return cookie转换为 JSONArray
+	 */
 	public JSONArray listCookieStoreCookes() {
 		JSONArray arr = new JSONArray();
 		List<Cookie> cks = this.getCookieStore().getCookies();
@@ -118,7 +149,7 @@ public class UNet {
 	/**
 	 * 设置 CookieStore
 	 * 
-	 * @param cookieStore
+	 * @param cookieStore cookieStore
 	 */
 	public void setCookieStore(BasicCookieStore cookieStore) {
 		this._CookieStore = cookieStore;
@@ -127,12 +158,17 @@ public class UNet {
 	/**
 	 * 最后一次返回状态码
 	 * 
-	 * @return
+	 * @return 最后一次返回状态码
 	 */
 	public int getLastStatusCode() {
 		return _LastStatusCode;
 	}
 
+	/**
+	 * 获取 UserAgent
+	 * 
+	 * @return UserAgent 浏览器代理
+	 */
 	public String getUserAgent() {
 		if (this.userAgent == null) {
 			return UNet.AGENT;
@@ -141,17 +177,21 @@ public class UNet {
 		}
 	}
 
+	/**
+	 * 设置 UserAgent
+	 * 
+	 * @param userAgent 浏览器代理
+	 */
 	public void setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 	}
 
-	public UNet() {
-		this._Headers = new HashMap<String, String>();
-		_Cookies = new HashMap<String, String>();
-
-		this._CookieStore = new BasicCookieStore();
-	}
-
+	/**
+	 * 增加自定义请求 header
+	 * 
+	 * @param key header的key
+	 * @param v   header的值
+	 */
 	public void addHeader(String key, String v) {
 		if (this._Headers.containsKey(key)) {
 			this._Headers.remove(key);
@@ -159,20 +199,18 @@ public class UNet {
 		this._Headers.put(key, v);
 	}
 
+	/**
+	 * 清除自定义请求 headers
+	 */
 	public void clearHeaders() {
 		this._Headers.clear();
 	}
 
-	public UNet(String cookie, String encoder) {
-		this._Headers = new HashMap<String, String>();
-		_Cookies = new HashMap<String, String>();
-
-		this._Cookie = cookie;
-		this._Encode = encoder;
-		this.initCookies();
-
-	}
-
+	/**
+	 * 获取cookies字符串
+	 * 
+	 * @return cookies字符串
+	 */
 	public String getCookies() {
 		MStr s = new MStr();
 		Iterator<String> it = this._Cookies.keySet().iterator();
@@ -202,6 +240,12 @@ public class UNet {
 		}
 	}
 
+	/**
+	 * 添加 cookie
+	 * 
+	 * @param name 名称
+	 * @param val  值
+	 */
 	void addCookie(String name, String val) {
 		name = name.trim();
 		if (this._Cookies.containsKey(name)) {
@@ -214,7 +258,7 @@ public class UNet {
 	 * 生成提交的body
 	 * 
 	 * @param body 提交的信息
-	 * @return
+	 * @return StringEntity
 	 */
 	public StringEntity createStringEntity(String body) {
 		String code = this._Encode == null ? "UTF-8" : this._Encode;
@@ -232,7 +276,7 @@ public class UNet {
 	 * 
 	 * @param u    发送地址
 	 * @param body 发送正文
-	 * @return
+	 * @return 执行结果
 	 */
 	public String patch(String u, String body) {
 		if (this._IsShowLog) {
@@ -257,7 +301,7 @@ public class UNet {
 	 * 
 	 * @param u    提交地址
 	 * @param body 提交内容
-	 * @return
+	 * @return 执行结果
 	 */
 	public String postMsg(String u, String body) {
 		if (this._IsShowLog) {
@@ -312,8 +356,8 @@ public class UNet {
 	/**
 	 * get 下载二进制
 	 * 
-	 * @param url
-	 * @return
+	 * @param url 地址
+	 * @return 文件二进制
 	 */
 	public byte[] downloadData(String url) {
 
@@ -338,9 +382,9 @@ public class UNet {
 	/**
 	 * PUT模式
 	 * 
-	 * @param url
+	 * @param url  地址
 	 * @param body 提交的内容
-	 * @return
+	 * @return 执行结果
 	 */
 	public String doPut(String url, String body) {
 
@@ -364,8 +408,8 @@ public class UNet {
 	/**
 	 * DELETE 模式
 	 * 
-	 * @param url
-	 * @return
+	 * @param url 地址
+	 * @return 执行结果
 	 */
 	public String doDelete(String url) {
 
@@ -387,8 +431,8 @@ public class UNet {
 	/**
 	 * get 获取网页文本
 	 * 
-	 * @param url
-	 * @return
+	 * @param url 地址
+	 * @return 执行结果
 	 */
 	public String doGet(String url) {
 		if (this._IsShowLog) {
@@ -410,7 +454,7 @@ public class UNet {
 	 * 
 	 * @param url  地址
 	 * @param vals 参数
-	 * @return
+	 * @return 执行结果
 	 */
 	public String doPost(String url, java.util.HashMap<String, String> vals) {
 		if (this._IsShowLog) {
@@ -451,7 +495,7 @@ public class UNet {
 	/**
 	 * 检查是否有重定向，有的化执行get（最多7次），没有返回追后执行的内容
 	 * 
-	 * @return
+	 * @return 重定向地址
 	 */
 	private String checkAndHandleRedirectString() {
 		if (this._LastStatusCode == 302 || this._LastStatusCode == 301) {
@@ -501,7 +545,7 @@ public class UNet {
 	 * @param fieldName 文件字段名称
 	 * @param filePath  文件地址
 	 * @param vals      参数
-	 * @return
+	 * @return 执行结果
 	 */
 	public String doUpload(String url, String fieldName, String filePath, HashMap<String, String> vals) {
 		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
@@ -527,7 +571,7 @@ public class UNet {
 	 * @param fieldName  文件字段名称
 	 * @param filePath   文件地址
 	 * @param formparams 参数
-	 * @return
+	 * @return 执行结果
 	 */
 	public String doUpload(String url, String fieldName, String filePath, List<BasicNameValuePair> formparams) {
 		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
@@ -550,9 +594,9 @@ public class UNet {
 	/**
 	 * 上传文件和参数
 	 * 
-	 * @param url      地址
-	 * @param reqParam 参数
-	 * @return
+	 * @param url                    地址
+	 * @param multipartEntityBuilder 参数
+	 * @return 执行结果
 	 */
 	public String doUpload(String url, MultipartEntityBuilder multipartEntityBuilder) {
 		if (this._IsShowLog) {
@@ -589,7 +633,7 @@ public class UNet {
 	 * @param url       地址
 	 * @param fieldName 上传域名
 	 * @param filePath  文件地址
-	 * @return
+	 * @return 执行结果
 	 */
 	public String doUpload(String url, String fieldName, String filePath) {
 		HashMap<String, String> vals = null;
@@ -600,7 +644,7 @@ public class UNet {
 	 * 根据url 获取 httpClient(http/https)
 	 * 
 	 * @param url
-	 * @return
+	 * @return CloseableHttpClient
 	 */
 	private CloseableHttpClient getHttpClient(String url) {
 		if (this._IsShowLog) {
@@ -633,7 +677,7 @@ public class UNet {
 	/**
 	 * 添加请求的头部
 	 * 
-	 * @param request
+	 * @param request 请求的头部
 	 */
 	private void addRequestHeaders(Object request) {
 		HttpMessage req = (HttpMessage) request;
@@ -665,6 +709,11 @@ public class UNet {
 		}
 	}
 
+	/**
+	 * 保存最后执行的头
+	 * 
+	 * @param response
+	 */
 	private void saveLastHeader(HttpResponse response) {
 		Header[] heads = response.getAllHeaders();
 		for (int i = 0; i < heads.length; i++) {
@@ -998,7 +1047,7 @@ public class UNet {
 	/**
 	 * 创建SSL安全连接
 	 *
-	 * @return
+	 * @return SSLConnectionSocketFactory
 	 */
 	private static SSLConnectionSocketFactory createSSLConnSocketFactory() {
 		SSLConnectionSocketFactory sslsf = null;
@@ -1022,8 +1071,6 @@ public class UNet {
 		return sslsf;
 	}
 
-	private URL _ReturnUrl;
-
 	/**
 	 * 追后一次执行错误
 	 * 
@@ -1032,8 +1079,6 @@ public class UNet {
 	public String getLastErr() {
 		return _LastErr;
 	}
-
-	private String _Encode;
 
 	/**
 	 * 请求和返回编码
@@ -1091,7 +1136,7 @@ public class UNet {
 	/**
 	 * 获取返回的 Url
 	 * 
-	 * @return
+	 * @return 返回的url
 	 */
 	@Deprecated
 	public URL getReturnUrl() {
@@ -1327,7 +1372,7 @@ public class UNet {
 	 * @param url       地址
 	 * @param fieldName 上传域名
 	 * @param filePath  文件地址
-	 * @return
+	 * @return 执行结果
 	 */
 	@Deprecated
 	public String doUpload_old(String url, String fieldName, String filePath) {

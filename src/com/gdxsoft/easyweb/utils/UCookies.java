@@ -30,10 +30,19 @@ public class UCookies {
 
 	private boolean ewaDes = false;
 
+	/**
+	 * 初始化
+	 */
 	public UCookies() {
 
 	}
 
+	/**
+	 * 初始化
+	 * 
+	 * @param path          cookie的路径
+	 * @param maxAgeSeconds cookie的 maxAge
+	 */
 	public UCookies(String path, Integer maxAgeSeconds) {
 		this.path = path;
 		this.maxAgeSeconds = maxAgeSeconds;
@@ -86,7 +95,7 @@ public class UCookies {
 	 * @param cookieName  名称
 	 * @param cookieValue 值
 	 * @param response    创建的Cookie
-	 * @return
+	 * @return Cookie
 	 */
 	public Cookie addCookie(String cookieName, String cookieValue, HttpServletResponse response) {
 		Cookie cookie = this.createCookie(cookieName, cookieValue);
@@ -258,7 +267,7 @@ public class UCookies {
 	/**
 	 * Cookie 的 secure
 	 * 
-	 * @param secert the secert to set
+	 * @param secret the secert to set
 	 */
 	public void setSecret(boolean secret) {
 		this.secret = secret;

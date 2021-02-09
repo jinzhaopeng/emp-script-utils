@@ -1,7 +1,5 @@
 package com.gdxsoft.easyweb.utils.Mail;
 
-//附件接收实现代码：
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -9,21 +7,16 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import javax.mail.BodyPart;
 import javax.mail.Flags;
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -32,6 +25,8 @@ import com.gdxsoft.easyweb.utils.UFile;
 import com.gdxsoft.easyweb.utils.Utils;
 
 /**
+ * 邮件解码
+ * 
  * @author Administrator
  * 
  */
@@ -45,6 +40,17 @@ public class MailDecode {
 	private List<Attachment> _Atts = new ArrayList<Attachment>();
 
 	/**
+	 * 初始化对象
+	 * 
+	 * @param mimeMessage        邮件
+	 * @param attachmentSavePath 附件保存目录
+	 */
+	public MailDecode(MimeMessage mimeMessage, String attachmentSavePath) {
+		this.mimeMessage = mimeMessage;
+		this.saveAttachPath = attachmentSavePath;
+	}
+
+	/**
 	 * 获取所有附件，包括attachment和inline
 	 * 
 	 * @return the _Atts
@@ -53,16 +59,11 @@ public class MailDecode {
 		return _Atts;
 	}
 
-	public MailDecode(MimeMessage mimeMessage, String attachmentSavePath) {
-		this.mimeMessage = mimeMessage;
-		this.saveAttachPath = attachmentSavePath;
-	}
-
 	/**
 	 * 
 	 * 获取发件人地址
 	 * 
-	 * @return
+	 * @return 地址
 	 */
 	public Addr getFrom() throws Exception {
 		InternetAddress address[] = (InternetAddress[]) mimeMessage.getFrom();
@@ -84,7 +85,7 @@ public class MailDecode {
 	/**
 	 * 获取抄送列表
 	 * 
-	 * @return
+	 * @return 抄送列表
 	 * @throws Exception
 	 */
 	public List<Addr> getCc() throws Exception {
@@ -94,7 +95,7 @@ public class MailDecode {
 	/**
 	 * 获取收件人列表
 	 * 
-	 * @return
+	 * @return 收件人列表
 	 * @throws Exception
 	 */
 	public List<Addr> getTo() throws Exception {
@@ -104,7 +105,7 @@ public class MailDecode {
 	/**
 	 * 获取密送人列表
 	 * 
-	 * @return
+	 * @return 密送人列表
 	 * @throws Exception
 	 */
 	public List<Addr> getBcc() throws Exception {
@@ -117,24 +118,21 @@ public class MailDecode {
 	 * "to"----收件人 <br>
 	 * "cc"---抄送人地址<br>
 	 * "bcc"---密送人地址
+	 * 
+	 * @return 邮件地址列表
 	 */
-
-	private List<Addr> getMailAddress(String type) throws Exception {
+	public List<Addr> getMailAddress(String type) throws Exception {
 		String addtype = type.toUpperCase();
 		InternetAddress[] address = null;
 
 		HashMap<String, String> addrs = new HashMap<String, String>();
-		if (addtype.equals("TO") || addtype.equals("CC")
-				|| addtype.equals("BCC")) {
+		if (addtype.equals("TO") || addtype.equals("CC") || addtype.equals("BCC")) {
 			if (addtype.equals("TO")) {
-				address = (InternetAddress[]) mimeMessage
-						.getRecipients(Message.RecipientType.TO);
+				address = (InternetAddress[]) mimeMessage.getRecipients(Message.RecipientType.TO);
 			} else if (addtype.equals("CC")) {
-				address = (InternetAddress[]) mimeMessage
-						.getRecipients(Message.RecipientType.CC);
+				address = (InternetAddress[]) mimeMessage.getRecipients(Message.RecipientType.CC);
 			} else {
-				address = (InternetAddress[]) mimeMessage
-						.getRecipients(Message.RecipientType.BCC);
+				address = (InternetAddress[]) mimeMessage.getRecipients(Message.RecipientType.BCC);
 			}
 			if (address != null) {
 				for (int i = 0; i < address.length; i++) {
@@ -172,7 +170,6 @@ public class MailDecode {
 	}
 
 	/**
-	 * 
 	 * 获取邮件主题
 	 */
 	public String getSubject() throws MessagingException {
@@ -185,7 +182,6 @@ public class MailDecode {
 		} catch (Exception exce) {
 			return exce.getMessage();
 		}
-
 	}
 
 	/**
@@ -213,7 +209,7 @@ public class MailDecode {
 		boolean conname = false;
 		if (nameindex != -1)
 			conname = true;
-		// System.out.println("CONTENTTYPE:　" + contenttype);
+		// System.out.println("CONTENTTYPE: " + contenttype);
 		if (part.isMimeType("text/plain") && !conname) {
 			Object o = part.getContent();
 			String txt = o.toString();
@@ -235,6 +231,12 @@ public class MailDecode {
 		}
 	}
 
+	/**
+	 * 删除 html的非body部分
+	 * 
+	 * @param html
+	 * @return
+	 */
 	private String removeHtmlBody(String html) {
 		String h1 = html.toUpperCase();
 		int locA = h1.indexOf("<BODY");
@@ -257,15 +259,14 @@ public class MailDecode {
 	}
 
 	/**
-	 * 
 	 * 判断此邮件是否需要回执，如果需要回执返回"true",否则返回"false"
 	 * 
+	 * @return 是否需要回执
 	 */
 
 	public boolean getReplySign() throws MessagingException {
 		boolean replysign = false;
-		String needreply[] = mimeMessage
-				.getHeader("Disposition-Notification-To");
+		String needreply[] = mimeMessage.getHeader("Disposition-Notification-To");
 		if (needreply != null) {
 			replysign = true;
 		}
@@ -274,23 +275,26 @@ public class MailDecode {
 
 	/**
 	 * 获得此邮件的Message-ID
+	 * @return Message-ID
 	 */
 	public String getMessageId() throws MessagingException {
 		return mimeMessage.getMessageID();
 	}
 
 	/**
-	 * 【判断此邮件是否已读，如果未读返回返回false,反之返回true】
+	 * 判断此邮件是否已读，如果未读返回返回false,反之返回true
+	 * 
+	 * @return 此邮件是否已读
 	 */
 	public boolean isNew() throws MessagingException {
 		boolean isnew = false;
 		Flags flags = ((Message) mimeMessage).getFlags();
 		Flags.Flag[] flag = flags.getSystemFlags();
-		// System.out.println("flags's　length:　" + flag.length);
+		// System.out.println("flags's length: " + flag.length);
 		for (int i = 0; i < flag.length; i++) {
 			if (flag[i] == Flags.Flag.SEEN) {
 				isnew = true;
-				// System.out.println("seen　Message.......");
+				// System.out.println("seen Message.......");
 				break;
 			}
 		}
@@ -301,6 +305,8 @@ public class MailDecode {
 	 * 
 	 * 判断此邮件是否包含附件
 	 * 
+	 * @param part 邮件部分
+	 * @return 是否包含附件
 	 */
 	public boolean isContainAttach(Part part) throws Exception {
 		boolean attachflag = false;
@@ -311,8 +317,7 @@ public class MailDecode {
 				BodyPart mpart = mp.getBodyPart(i);
 				String disposition = mpart.getDisposition();
 				if ((disposition != null)
-						&& ((disposition.equals(Part.ATTACHMENT)) || (disposition
-								.equals(Part.INLINE))))
+						&& ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE))))
 					attachflag = true;
 				else if (mpart.isMimeType("multipart/*")) {
 					attachflag = isContainAttach((Part) mpart);
@@ -342,6 +347,8 @@ public class MailDecode {
 
 	/**
 	 * 保存附件
+	 * 
+	 * @param part 附加
 	 */
 	private void saveAttachMent(Part part) throws Exception {
 		String fileName = "";
@@ -351,8 +358,7 @@ public class MailDecode {
 				BodyPart mpart = mp.getBodyPart(i);
 				String disposition = mpart.getDisposition();
 				if ((disposition != null)
-						&& ((disposition.equals(Part.ATTACHMENT)) || (disposition
-								.equals(Part.INLINE)))) {
+						&& ((disposition.equals(Part.ATTACHMENT)) || (disposition.equals(Part.INLINE)))) {
 					Attachment att = this.saveAttachmentToFile(mpart);
 					if (att != null) {
 						this._Atts.add(att);
@@ -361,8 +367,7 @@ public class MailDecode {
 					saveAttachMent(mpart);
 				} else {
 					fileName = mpart.getFileName();
-					if ((fileName != null)
-							&& (fileName.toLowerCase().indexOf("GB2312") != -1)) {
+					if ((fileName != null) && (fileName.toLowerCase().indexOf("GB2312") != -1)) {
 						fileName = MimeUtility.decodeText(fileName);
 						saveFile(fileName, mpart.getInputStream());
 					}
@@ -376,8 +381,8 @@ public class MailDecode {
 	/**
 	 * 获取保存的附件
 	 * 
-	 * @param mpart
-	 * @return
+	 * @param mpart 邮件部分
+	 * @return 附件
 	 * @throws Exception
 	 */
 	private Attachment saveAttachmentToFile(BodyPart mpart) throws Exception {
@@ -415,6 +420,8 @@ public class MailDecode {
 
 	/**
 	 * 【获得附件存放路径】
+	 * 
+	 * @return 附件存放路径
 	 */
 	public String getAttachPath() {
 		return saveAttachPath;
@@ -423,7 +430,7 @@ public class MailDecode {
 	/**
 	 * 获取邮件正文 HTML
 	 * 
-	 * @return
+	 * @return 正文 HTML
 	 * @throws Exception
 	 */
 	public String getBodyHtml() throws Exception {
@@ -437,7 +444,7 @@ public class MailDecode {
 	/**
 	 * 获取邮件正文 纯文本
 	 * 
-	 * @return
+	 * @return 正文 纯文本
 	 * @throws Exception
 	 * 
 	 */
@@ -451,6 +458,9 @@ public class MailDecode {
 
 	/**
 	 * 【真正的保存附件到指定目录里】
+	 * 
+	 * @param fileName 文件路径
+	 * @param in       流
 	 */
 	private String saveFile(String fileName, InputStream in) throws Exception {
 		String osName = System.getProperty("os.name");
@@ -489,57 +499,6 @@ public class MailDecode {
 		} finally {
 			bos.close();
 			bis.close();
-		}
-	}
-
-	/**
-	 * PraseMimeMessage类测试
-	 */
-	public static void main(String args[]) throws Exception {
-		String host = "192.168.1.10";// 【POP3.163.com】
-		String username = "root@192.168.1.10";// 【yuxia2217】
-		String password = "brysj!@hhrhl";// 【........】
-		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
-		Store store = session.getStore("pop3");
-		store.connect(host, username, password);
-		Folder folder = store.getFolder("INBOX");
-		folder.open(Folder.READ_ONLY);
-		Message message[] = folder.getMessages();
-		System.out.println("Messages's　length:　" + message.length);
-		MailDecode pmm = null;
-		for (int i = 0; i < message.length; i++) {
-			pmm = new MailDecode((MimeMessage) message[i], "D:\\image");
-			System.out
-					.println("Message　" + i + "　subject:　" + pmm.getSubject());
-			System.out.println("Message　" + i + "　sentdate:　"
-					+ pmm.getSentDate());
-			System.out.println("Message　" + i + "　replysign:　"
-					+ pmm.getReplySign());
-			System.out.println("Message　新的" + i + "　hasRead:　" + pmm.isNew());
-			System.out.println("Message　附件" + i + "　　containAttachment:　"
-					+ pmm.isContainAttach((Part) message[i]));
-			System.out.println("Message　" + i + "　form:　" + pmm.getFrom());
-			System.out.println("Message　" + i + "　to:　"
-					+ pmm.getMailAddress("to"));
-			System.out.println("Message　" + i + "　cc:　"
-					+ pmm.getMailAddress("cc"));
-			System.out.println("Message　" + i + "　bcc:　"
-					+ pmm.getMailAddress("bcc"));
-			System.out.println("Message" + i + "　sentdate:　"
-					+ pmm.getSentDate());
-			System.out.println("Message　" + i + "　Message-ID:　"
-					+ pmm.getMessageId());
-			System.out.println("Message　正文" + i + "　bodycontent:　\r\n"
-					+ pmm.getBodyText());
-
-			pmm.saveAttachments();
-
-			List<Attachment> atts = pmm.getAtts();
-			for (int k = 0; k < atts.size(); k++) {
-				Attachment att = atts.get(k);
-				System.out.println(att.toString());
-			}
 		}
 	}
 

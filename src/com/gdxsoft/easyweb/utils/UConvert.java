@@ -4,7 +4,11 @@ import java.io.IOException;
 
 import org.apache.commons.codec.binary.Base64;
 
-
+/**
+ * 模仿.net Convert
+ * @author admin
+ *
+ */
 public class UConvert {
 	public static byte[] FromBase64String(String s) throws IOException {
 		return Base64.decodeBase64(s);

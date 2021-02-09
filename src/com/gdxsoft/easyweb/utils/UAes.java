@@ -49,8 +49,8 @@ public class UAes {
 	/**
 	 * 初始化默认的 key和iv
 	 * 
-	 * @param key
-	 * @param iv
+	 * @param key 默认的密码
+	 * @param iv  默认的向量
 	 */
 	public synchronized static void initDefaultKey(String key, String iv) {
 		AES_KEY_VALUE = key;
@@ -60,7 +60,7 @@ public class UAes {
 	/**
 	 * 获取默认密码的 AES (aes128cbc)
 	 * 
-	 * @return
+	 * @return 默认密码的 AES
 	 * @throws Exception
 	 */
 	public synchronized static UAes getInstance() throws Exception {
@@ -199,8 +199,8 @@ public class UAes {
 	/**
 	 * 解密 以String密文输入,String明文输出
 	 * 
-	 * @param base64Encrypt
-	 * @return
+	 * @param base64Encrypt 密文
+	 * @return 明文
 	 * @throws Exception
 	 */
 	public String decrypt(String base64Encrypt, String charsetName) throws Exception {
@@ -223,16 +223,17 @@ public class UAes {
 	/**
 	 * 解密 以String密文输入,String明文输出
 	 * 
-	 * @param base64Encrypt
-	 * @return
+	 * @param base64Encrypt 密文
+	 * @return 明文 UTF8
 	 * @throws Exception
 	 */
 	public String decrypt(String base64Encrypt) throws Exception {
 		return this.decrypt(base64Encrypt, "UTF8");
 	}
-	
+
 	/**
 	 * 解密 以String密文输入
+	 * 
 	 * @param byteMi 密文
 	 * @return 明文 UTF8
 	 * @throws Exception
@@ -242,6 +243,7 @@ public class UAes {
 		String strMing = new String(byteMing, "UTF8");
 		return strMing;
 	}
+
 	/**
 	 * 解密 以String密文输入,String明文输出
 	 * 
@@ -260,7 +262,7 @@ public class UAes {
 	 * 解密
 	 * 
 	 * @param base64Mi base64编码的密文
-	 * @return
+	 * @return 明文UTF8
 	 * @throws Exception
 	 */
 	@Deprecated
@@ -291,10 +293,10 @@ public class UAes {
 	}
 
 	/**
-	 * 解密 以String密文输入,String明文输出
+	 * 解密 同 decrypt
 	 * 
-	 * @param strMi
-	 * @return
+	 * @param strMi 密文
+	 * @return 明文
 	 * @throws Exception
 	 */
 	@Deprecated
@@ -306,7 +308,7 @@ public class UAes {
 	 * 解密 ，同 decryptBytes
 	 * 
 	 * @param bytesEncrypt 密文
-	 * @return
+	 * @return 明文
 	 * @throws Exception
 	 */
 	@Deprecated
@@ -317,7 +319,7 @@ public class UAes {
 	/**
 	 * 填充模式 paadding
 	 * 
-	 * @return
+	 * @return 填充模式
 	 */
 	public String getAesMethod() {
 		if (this.method == null) {
@@ -417,7 +419,7 @@ public class UAes {
 	/**
 	 * 获取向量 iv
 	 * 
-	 * @return
+	 * @return 向量 iv
 	 */
 	public IvParameterSpec getIvSpec() {
 		return ivSpec;

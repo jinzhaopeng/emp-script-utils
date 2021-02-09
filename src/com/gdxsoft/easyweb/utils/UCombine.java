@@ -5,24 +5,26 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
+ * !!!不建议再用!!!<br>
  * 合并静态文件对象（js/css）
  * 
  * @author admin
  *
  */
+@Deprecated
 public class UCombine {
 
 	/**
 	 * 获取Js实例
 	 * 
 	 * @param context
-	 * @return
+	 * @return 实例化js
 	 */
 	public static UCombine instanceOfJs(String context) {
 		UCombine c = new UCombine("JS");
 		c._Context = context;
-		if(c._Context.startsWith("//")){
-			c._Context=c._Context.replace("//", "/");
+		if (c._Context.startsWith("//")) {
+			c._Context = c._Context.replace("//", "/");
 		}
 		return c;
 	}
@@ -31,13 +33,13 @@ public class UCombine {
 	 * 获取Css实例
 	 * 
 	 * @param context
-	 * @return
+	 * @return 实例化的css
 	 */
 	public static UCombine instanceOfCss(String context) {
 		UCombine c = new UCombine("CSS");
 		c._Context = context;
-		if(c._Context.startsWith("//")){
-			c._Context=c._Context.replace("//", "/");
+		if (c._Context.startsWith("//")) {
+			c._Context = c._Context.replace("//", "/");
 		}
 		return c;
 	}
@@ -47,7 +49,7 @@ public class UCombine {
 	/**
 	 * 获取CGI路径
 	 * 
-	 * @return
+	 * @return CGI路径
 	 */
 	public String getCombineCgi() {
 		return _CombineCgi;
@@ -56,7 +58,7 @@ public class UCombine {
 	/**
 	 * 设置CGI路径
 	 * 
-	 * @param _CombineCgi
+	 * @param _CombineCgi CGI路径
 	 */
 	public void setCombineCgi(String _CombineCgi) {
 		this._CombineCgi = _CombineCgi;
@@ -74,15 +76,24 @@ public class UCombine {
 		_Al = new ArrayList<String>();
 	}
 
+	/**
+	 * 增加路径
+	 * 
+	 * @param path 路径
+	 */
 	public void add(String path) {
 		_Al.add(path);
 	}
 
+	/**
+	 * 转成表 js/css 的达式
+	 * @return js/css 的达式
+	 */
 	public String toString() {
-		if(this._Al.size()==0){
+		if (this._Al.size() == 0) {
 			return "";
 		}
-		
+
 		StringBuilder sbCssJs = new StringBuilder();
 		if (!this._IsDebug) {
 			if (this._Method.equals("CSS")) {
@@ -138,38 +149,74 @@ public class UCombine {
 		return sbCssJs.toString();
 	}
 
+	/**
+	 * Context
+	 * @return Context
+	 */
 	public String getContext() {
 		return _Context;
 	}
 
+	/**
+	 * Context
+	 * @param _Context Context
+	 */
 	public void setContext(String _Context) {
 		this._Context = _Context;
 	}
 
+	/**
+	 *  Method
+	 * @return Method
+	 */
 	public String getMethod() {
 		return _Method;
 	}
 
+	/**
+	 * Method
+	 * @param _Method Method
+	 */
 	public void setMethod(String _Method) {
 		this._Method = _Method;
 	}
 
+	/**
+	 * isNew
+	 * @return true/false
+	 */
 	public boolean isNew() {
 		return _IsNew;
 	}
 
+	/**
+	 * isNew
+	 * @param _IsNew isNew
+	 */
 	public void setIsNew(boolean _IsNew) {
 		this._IsNew = _IsNew;
 	}
 
+	/**
+	 * isDebug 
+	 * @return isDebug
+	 */
 	public boolean isDebug() {
 		return _IsDebug;
 	}
 
+	/**
+	 * isDebug
+	 * @param _IsDebug isDebug
+	 */
 	public void setIsDebug(boolean _IsDebug) {
 		this._IsDebug = _IsDebug;
 	}
 
+	/**
+	 * Al
+	 * @return Al
+	 */
 	public ArrayList<String> getAl() {
 		return _Al;
 	}

@@ -22,7 +22,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-
 import com.gdxsoft.easyweb.utils.UMail;
 import com.gdxsoft.easyweb.utils.Utils;
 
@@ -40,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SendMail {
-    private Logger log = LoggerFactory.getLogger(SendMail.class);
+	private Logger log = LoggerFactory.getLogger(SendMail.class);
 
 	Properties props;
 	private String smtp_uid;
@@ -74,15 +73,25 @@ public class SendMail {
 
 	private MimeMessage mimeMessage_;
 
-	
 	private Exception lastError;
 
 	private HashMap<String, String> headers_ = new HashMap<String, String>();
 
+	/**
+	 * 初始化发送邮件
+	 */
 	public SendMail() {
 
 	}
 
+	/**
+	 * 初始化发送邮件
+	 * 
+	 * @param host 服务器
+	 * @param port 端口
+	 * @param uid  用户
+	 * @param pwd  密码
+	 */
 	public SendMail(String host, int port, String uid, String pwd) {
 		this.initProps(host, port, uid, pwd);
 	}
@@ -102,7 +111,7 @@ public class SendMail {
 	 * 设置发件人
 	 * 
 	 * @param fromEmail 发件人邮件
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail setFrom(String fromEmail) {
 		this.from_ = new Addr(fromEmail, null);
@@ -113,7 +122,7 @@ public class SendMail {
 	 * 设置发件人
 	 * 
 	 * @param from 发件人
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail setFrom(Addr from) {
 		this.from_ = from;
@@ -121,6 +130,8 @@ public class SendMail {
 	}
 
 	/**
+	 * 获取发件人
+	 * 
 	 * @return the sender_
 	 */
 	public Addr getSender() {
@@ -128,8 +139,10 @@ public class SendMail {
 	}
 
 	/**
-	 * @param sender_ the sender_ to set
-	 * @return
+	 * 设置发件人
+	 * 
+	 * @param sender the sender_ to set
+	 * @return SendMail
 	 */
 	public SendMail setSender(Addr sender) {
 		sender_ = sender;
@@ -139,8 +152,9 @@ public class SendMail {
 	/**
 	 * 设置发件人
 	 * 
-	 * @param fromEmail 发件人邮件
-	 * @param fromName  发件人姓名
+	 * @param senderEmail 发件人邮件
+	 * @param senderName  发件人姓名
+	 * @return SendMail
 	 */
 	public SendMail setSender(String senderEmail, String senderName) {
 		this.sender_ = new Addr(senderEmail, senderName);
@@ -150,8 +164,8 @@ public class SendMail {
 	/**
 	 * 设置发件人
 	 * 
-	 * @param fromEmail 发件人邮件
-	 * @return
+	 * @param senderEmail 发件人邮件
+	 * @return SendMail
 	 */
 	public SendMail setSender(String senderEmail) {
 		this.sender_ = new Addr(senderEmail, null);
@@ -161,9 +175,9 @@ public class SendMail {
 	/**
 	 * 批量添加收件人
 	 * 
-	 * @param tos
-	 * @param toNames
-	 * @return
+	 * @param tos     收件人邮件数组
+	 * @param toNames 收件人名称数组， tos.length = toNames.length
+	 * @return SendMail
 	 */
 	public SendMail addTos(String[] tos, String[] toNames) {
 		if (tos != null) {
@@ -183,7 +197,8 @@ public class SendMail {
 	/**
 	 * 添加收件人
 	 * 
-	 * @param toEmail
+	 * @param toEmail 收件人邮件
+	 * @return SendMail
 	 */
 	public SendMail addTo(String toEmail) {
 		return this.addTo(toEmail, null);
@@ -192,8 +207,10 @@ public class SendMail {
 	/**
 	 * 添加收件人
 	 * 
-	 * @param toEmail
-	 * @param toName
+	 * @param toEmail 收件人邮件
+	 * @param toName  收件人姓名
+	 * 
+	 * @return SendMail
 	 */
 	public SendMail addTo(String toEmail, String toName) {
 		String keytoEmail = toEmail.trim().toLowerCase();
@@ -205,7 +222,8 @@ public class SendMail {
 	/**
 	 * 添加收件人
 	 * 
-	 * @param to
+	 * @param to 收件人
+	 * @return SendMail
 	 */
 	public SendMail addTo(Addr to) {
 		String keytoEmail = to.getEmail().toUpperCase().trim();
@@ -216,21 +234,24 @@ public class SendMail {
 	/**
 	 * 添加回复人
 	 * 
-	 * @param toEmail
+	 * @param replyTo 回复人邮件地址
+	 * 
+	 * @return SendMail
 	 */
-	public SendMail addReplyTo(String toEmail) {
-		return this.addReplyTo(toEmail, null);
+	public SendMail addReplyTo(String replyTo) {
+		return this.addReplyTo(replyTo, null);
 	}
 
 	/**
 	 * 添加回复人
 	 * 
-	 * @param toEmail
-	 * @param toName
+	 * @param replyToEmail 回复人邮件
+	 * @param replyToName  回复人名称
+	 * @return SendMail
 	 */
-	public SendMail addReplyTo(String toEmail, String toName) {
-		String keytoEmail = toEmail.trim().toLowerCase();
-		Addr to = new Addr(toEmail, toName);
+	public SendMail addReplyTo(String replyToEmail, String replyToName) {
+		String keytoEmail = replyToEmail.trim().toLowerCase();
+		Addr to = new Addr(replyToEmail, replyToName);
 		this.replayTos_.put(keytoEmail, to);
 		return this;
 	}
@@ -238,20 +259,21 @@ public class SendMail {
 	/**
 	 * 添加回复人
 	 * 
-	 * @param to
+	 * @param replyTo 回复人地址
+	 * @return SendMail
 	 */
-	public SendMail addReplyTo(Addr to) {
-		String keytoEmail = to.getEmail().toUpperCase().trim();
-		replayTos_.put(keytoEmail, to);
+	public SendMail addReplyTo(Addr replyTo) {
+		String keytoEmail = replyTo.getEmail().toUpperCase().trim();
+		replayTos_.put(keytoEmail, replyTo);
 		return this;
 	}
 
 	/**
 	 * 批量添加回复人
 	 * 
-	 * @param tos
-	 * @param toNames
-	 * @return
+	 * @param tos     回复人邮件地址数组
+	 * @param toNames 回复人姓名数组
+	 * @return SendMail
 	 */
 	public SendMail addReplyTos(String[] tos, String[] toNames) {
 		if (tos != null) {
@@ -273,6 +295,7 @@ public class SendMail {
 	 * 添加抄送人
 	 * 
 	 * @param ccEmail 抄送人邮件
+	 * @return SendMail
 	 */
 	public SendMail addCc(String ccEmail) {
 		this.addCc(ccEmail, null);
@@ -284,6 +307,7 @@ public class SendMail {
 	 * 
 	 * @param ccEmail 抄送人邮件
 	 * @param ccName  抄送人姓名
+	 * @return SendMail
 	 */
 	public SendMail addCc(String ccEmail, String ccName) {
 		String keytoEmail = ccEmail.trim().toLowerCase();
@@ -295,20 +319,21 @@ public class SendMail {
 	/**
 	 * 添加抄送人
 	 * 
-	 * @param bcc 抄送人
+	 * @param cc 抄送人
+	 * @return SendMail
 	 */
-	public SendMail addCc(Addr bcc) {
-		String keytoEmail = bcc.getEmail().toUpperCase().trim();
-		bccs_.put(keytoEmail, bcc);
+	public SendMail addCc(Addr cc) {
+		String keytoEmail = cc.getEmail().toUpperCase().trim();
+		bccs_.put(keytoEmail, cc);
 		return this;
 	}
 
 	/**
 	 * 批量添加 抄送人
 	 * 
-	 * @param tos
-	 * @param toNames
-	 * @return
+	 * @param ccs     抄送人邮件数组
+	 * @param ccNames 抄送人姓名数组
+	 * @return SendMail
 	 */
 	public SendMail addCcs(String[] ccs, String[] ccNames) {
 		if (ccs != null) {
@@ -329,6 +354,7 @@ public class SendMail {
 	 * 添加密送
 	 * 
 	 * @param bccEmail 密送邮件
+	 * @return SendMail
 	 */
 	public SendMail addBcc(String bccEmail) {
 		this.addBcc(bccEmail, null);
@@ -340,6 +366,7 @@ public class SendMail {
 	 * 
 	 * @param bccEmail 密送邮件
 	 * @param bccName  密送人姓名
+	 * @return SendMail
 	 */
 	public SendMail addBcc(String bccEmail, String bccName) {
 		String keytoEmail = bccEmail.trim().toLowerCase();
@@ -352,6 +379,7 @@ public class SendMail {
 	 * 添加密送
 	 * 
 	 * @param bcc 密送人
+	 * @return SendMail
 	 */
 	public SendMail addBcc(Addr bcc) {
 		String keytoEmail = bcc.getEmail().toUpperCase().trim();
@@ -362,9 +390,9 @@ public class SendMail {
 	/**
 	 * 批量添加 密送人
 	 * 
-	 * @param tos
-	 * @param toNames
-	 * @return
+	 * @param bccs     密送邮件数组
+	 * @param bccNames 密送人姓名数组
+	 * @return SendMail
 	 */
 	public SendMail addBccs(String[] bccs, String[] bccNames) {
 		if (bccs != null) {
@@ -384,8 +412,8 @@ public class SendMail {
 	/**
 	 * 添加附件
 	 * 
-	 * @param file
-	 * @return
+	 * @param file 附件文件
+	 * @return SendMail
 	 */
 	public SendMail addAttach(File file) {
 		String name = file.getName();
@@ -400,9 +428,9 @@ public class SendMail {
 	/**
 	 * 添加附件
 	 * 
-	 * @param attName
-	 * @param file
-	 * @return
+	 * @param attName 附件名称
+	 * @param file    附件文件
+	 * @return SendMail
 	 */
 	public SendMail addAttach(String attName, File file) {
 		String path = file.getAbsolutePath();
@@ -420,9 +448,9 @@ public class SendMail {
 	/**
 	 * 创建附件
 	 * 
-	 * @param attName
-	 * @param path
-	 * @return
+	 * @param attName 附件名称
+	 * @param path    附件路径
+	 * @return Attachment 附件
 	 */
 	private Attachment createAtt(String attName, String path) {
 		if (attName == null || attName.trim().length() == 0) {
@@ -441,7 +469,7 @@ public class SendMail {
 	 * 添加附件
 	 * 
 	 * @param path 附件路径
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail addAttach(String path) {
 		File f = new File(path);
@@ -453,7 +481,7 @@ public class SendMail {
 	 * 
 	 * @param attName 附加名称
 	 * @param path    附件路径
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail addAttach(String attName, String path) {
 		Attachment att = this.createAtt(attName, path);
@@ -464,9 +492,9 @@ public class SendMail {
 	/**
 	 * 批量添加 附件
 	 * 
-	 * @param tos
-	 * @param toNames
-	 * @return
+	 * @param attachPaths 附件路径数组
+	 * @param attNames    附件名称数组
+	 * @return SendMail
 	 */
 	public SendMail addAttachs(String[] attachPaths, String[] attNames) {
 		if (attachPaths != null) {
@@ -486,11 +514,11 @@ public class SendMail {
 	/**
 	 * 初始化SMTP属性
 	 * 
-	 * @param host
-	 * @param port
-	 * @param uid
-	 * @param pwd
-	 * @return
+	 * @param host SMTP服务器
+	 * @param port SMTP端口
+	 * @param uid  发件人
+	 * @param pwd  发件人密码
+	 * @return SendMail
 	 */
 	public SendMail initProps(String host, int port, String uid, String pwd) {
 		return this.initProps(host, port, uid, pwd, false);
@@ -499,14 +527,14 @@ public class SendMail {
 	/**
 	 * 初始化SMTP属性
 	 * 
-	 * @param host
-	 * @param port
-	 * @param uid
-	 * @param pwd
-	 * @param isTryStartTls 尝试用starttls命令发邮件
-	 * @return
+	 * @param host        SMTP服务器
+	 * @param port        SMTP端口
+	 * @param uid         发件人
+	 * @param pwd         发件人密码
+	 * @param tryStartTls 尝试用starttls命令发邮件
+	 * @return SendMail
 	 */
-	public SendMail initProps(String host, int port, String uid, String pwd, boolean isTryStartTls) {
+	public SendMail initProps(String host, int port, String uid, String pwd, boolean tryStartTls) {
 		props = new Properties();
 		props.setProperty("mail.transport.protocol", "smtp");
 		// props.setProperty("mail.host", host);
@@ -525,7 +553,7 @@ public class SendMail {
 			props.put("mail.smtp.ssl.trust", host);
 			props.put("mail.smtp.ssl.trust", host);
 			this.setUseSsl(true);
-		} else if (isTryStartTls) {
+		} else if (tryStartTls) {
 			// If true, requires the use of the STARTTLS command. If the server doesn't
 			// support the STARTTLS command, or the command fails, the connect method will
 			// fail. Defaults to false.
@@ -547,7 +575,7 @@ public class SendMail {
 	/**
 	 * 获取MailSession
 	 * 
-	 * @return
+	 * @return SendMail
 	 */
 	public Session getMailSession() {
 		if (mailSession == null) {
@@ -571,6 +599,12 @@ public class SendMail {
 		return mailSession;
 	}
 
+	/**
+	 * 转换为 InternetAddress格式
+	 * 
+	 * @param addr 邮件地址
+	 * @return InternetAddress
+	 */
 	public InternetAddress getAddress(Addr addr) {
 		InternetAddress iaFrom = new InternetAddress();
 		iaFrom.setAddress(addr.getEmail().trim());
@@ -585,6 +619,12 @@ public class SendMail {
 		return iaFrom;
 	}
 
+	/**
+	 * 转换为 InternetAddress 数组
+	 * 
+	 * @param addrs 邮件地址map
+	 * @return InternetAddress数组
+	 */
 	private InternetAddress[] getAddresses(HashMap<String, Addr> addrs) {
 		InternetAddress[] addresses = new InternetAddress[addrs.size()];
 		int inc = 0;
@@ -600,7 +640,7 @@ public class SendMail {
 	/**
 	 * 获取邮件
 	 * 
-	 * @return
+	 * @return 邮件
 	 * @throws MessagingException
 	 */
 	public MimeMessage getMimeMessage() throws MessagingException {
@@ -611,6 +651,12 @@ public class SendMail {
 		return mm;
 	}
 
+	/**
+	 * 获取邮件内容
+	 * 
+	 * @return 邮件内容
+	 * @throws MessagingException
+	 */
 	private MimeBodyPart getMailContent() throws MessagingException {
 		if (this.textContent_ == null && this.isAutoTextPart_ && this.htmlContent_ != null) {
 			this.textContent_ = Utils.filterHtml(this.htmlContent_);
@@ -652,7 +698,7 @@ public class SendMail {
 	/**
 	 * 创建邮件
 	 * 
-	 * @return
+	 * @return 邮件
 	 * @throws MessagingException
 	 */
 	public MimeMessage createMinMessage() throws MessagingException {
@@ -757,19 +803,19 @@ public class SendMail {
 	/**
 	 * 将头部放到缓存中
 	 * 
-	 * @param name
-	 * @param value
-	 * @return
+	 * @param name  名称
+	 * @param value 值
+	 * @return SendMail
 	 */
-	public boolean addHeader(String name, String value) {
+	public SendMail addHeader(String name, String value) {
 		headers_.put(name, value);
-		return true;
+		return this;
 	}
 
 	/**
 	 * 发送邮件
 	 * 
-	 * @return
+	 * @return 发送结果
 	 */
 	public boolean send() {
 		Session mailSession = getMailSession();
@@ -840,7 +886,7 @@ public class SendMail {
 	 * @param domain             域名，需要和发件人域名一致
 	 * @param privateKeyFilePath 私有文件路径
 	 * @param select             选择，默认default
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail setDkim(String domain, String privateKeyFilePath, String select) {
 		if (select == null) {
@@ -858,7 +904,7 @@ public class SendMail {
 	 * 设置邮件DKIM
 	 * 
 	 * @param cfg DKIMCfg
-	 * @return
+	 * @return SendMail
 	 */
 	public SendMail setDkim(DKIMCfg cfg) {
 		if (cfg != null) {
@@ -872,6 +918,14 @@ public class SendMail {
 		return this;
 	}
 
+	/**
+	 * 签名邮件
+	 * 
+	 * @param mm 原始邮件
+	 * @return 签名后邮件
+	 * @throws MessagingException
+	 * @throws DKIMSignerException
+	 */
 	public MimeMessage dkimSign(MimeMessage mm) throws MessagingException, DKIMSignerException {
 		if (this.dkimSigner_ != null) {
 			dkimSigner_.setIdentity(this.from_.getEmail());
@@ -880,25 +934,40 @@ public class SendMail {
 		return mm;
 	}
 
+	/**
+	 * 获取 messageId
+	 * 
+	 * @return messageId
+	 */
 	public String getMessageId() {
 		return messageId;
 
 	}
 
-	public SendMail setMessageId(String msgId) {
-		this.messageId = msgId;
+	/**
+	 * 设置 messageId
+	 * 
+	 * @param messageId messageId
+	 * @return SendMail
+	 */
+	public SendMail setMessageId(String messageId) {
+		this.messageId = messageId;
 		return this;
 	}
 
 	/**
-	 * @return the subject_
+	 * 标题
+	 * 
+	 * @return the 标题
 	 */
 	public String getSubject() {
 		return subject_;
 	}
 
 	/**
-	 * @param subject_ the subject_ to set
+	 * 标题
+	 * 
+	 * @param subject 标题
 	 */
 	public SendMail setSubject(String subject) {
 		this.subject_ = subject;
@@ -906,14 +975,18 @@ public class SendMail {
 	}
 
 	/**
-	 * @return the htmlContent_
+	 * 正文html
+	 * 
+	 * @return the 正文html
 	 */
 	public String getHtmlContent() {
 		return htmlContent_;
 	}
 
 	/**
-	 * @param htmlContent_ the htmlContent_ to set
+	 * 正文html
+	 * 
+	 * @param htmlContent the htmlContent_ to set
 	 */
 	public SendMail setHtmlContent(String htmlContent) {
 		this.htmlContent_ = htmlContent;
@@ -921,14 +994,18 @@ public class SendMail {
 	}
 
 	/**
-	 * @return the textContent_
+	 * 正文 纯文本
+	 * 
+	 * @return the 纯文本
 	 */
 	public String getTextContent() {
 		return textContent_;
 	}
 
 	/**
-	 * @param textContent_ the textContent_ to set
+	 * 纯文本
+	 * 
+	 * @param textContent the textContent_ to set
 	 */
 	public SendMail setTextContent(String textContent) {
 		this.textContent_ = textContent;
@@ -938,34 +1015,34 @@ public class SendMail {
 	/**
 	 * 发件人
 	 * 
-	 * @return the from_
+	 * @return the 发件人
 	 */
 	public Addr getFrom() {
 		return from_;
 	}
 
 	/**
-	 * 收件人
+	 * 收件人map
 	 * 
-	 * @return the to_
+	 * @return the 收件人
 	 */
 	public HashMap<String, Addr> getTos() {
 		return tos_;
 	}
 
 	/**
-	 * 抄送
+	 * 抄送map
 	 * 
-	 * @return the ccs_
+	 * @return the 抄送map
 	 */
 	public HashMap<String, Addr> getCcs() {
 		return ccs_;
 	}
 
 	/**
-	 * 密送
+	 * 密送map
 	 * 
-	 * @return the bccs_
+	 * @return the 密送map
 	 */
 	public HashMap<String, Addr> getBccs() {
 		return bccs_;
@@ -974,7 +1051,7 @@ public class SendMail {
 	/**
 	 * 获取邮件编码
 	 * 
-	 * @return the charset_
+	 * @return the 邮件编码
 	 */
 	public String getCharset() {
 		return charset_;
@@ -983,8 +1060,8 @@ public class SendMail {
 	/**
 	 * 设置邮件编码
 	 * 
-	 * @param charset_ the charset_ to set
-	 * @return
+	 * @param charset the charset_ to set
+	 * @return SendMail
 	 */
 	public SendMail setCharset(String charset) {
 		this.charset_ = charset;
@@ -992,9 +1069,9 @@ public class SendMail {
 	}
 
 	/**
-	 * 抄送给自己
+	 * 是否抄送给自己
 	 * 
-	 * @return the isSendToSelf_
+	 * @return the 是否抄送给自己
 	 */
 	public boolean isSendToSelf() {
 		return isSendToSelf_;
@@ -1003,18 +1080,18 @@ public class SendMail {
 	/**
 	 * 抄送给自己
 	 * 
-	 * @param isSendToSelf_ the isSendToSelf_ to set
-	 * @return
+	 * @param sendToSelf the isSendToSelf_ to set
+	 * @return SendMail
 	 */
-	public SendMail setSendToSelf(boolean isSendToSelf) {
-		this.isSendToSelf_ = isSendToSelf;
+	public SendMail setSendToSelf(boolean sendToSelf) {
+		this.isSendToSelf_ = sendToSelf;
 		return this;
 	}
 
 	/**
 	 * 要求阅读回执(收件人阅读邮件时会提示回复发件人,表明邮件已收到,并已阅读)
 	 * 
-	 * @return the isDispositionNotificationTo_
+	 * @return the 要求阅读回执
 	 */
 	public boolean isDispositionNotificationTo() {
 		return isDispositionNotificationTo_;
@@ -1023,11 +1100,11 @@ public class SendMail {
 	/**
 	 * 要求阅读回执(收件人阅读邮件时会提示回复发件人,表明邮件已收到,并已阅读)
 	 * 
-	 * @param isDispositionNotificationTo 要求阅读回执
-	 * @return
+	 * @param dispositionNotificationTo 要求阅读回执
+	 * @return SendMail
 	 */
-	public SendMail setDispositionNotificationTo(boolean isDispositionNotificationTo) {
-		this.isDispositionNotificationTo_ = isDispositionNotificationTo;
+	public SendMail setDispositionNotificationTo(boolean dispositionNotificationTo) {
+		this.isDispositionNotificationTo_ = dispositionNotificationTo;
 		return this;
 	}
 
@@ -1043,15 +1120,17 @@ public class SendMail {
 	/**
 	 * 是否自动创建html邮件的纯文本部分，便于降低垃圾邮件判别的评分，默认true
 	 * 
-	 * @param isAutoTextPart_ the isAutoTextPart_ to set
-	 * @return
+	 * @param autoTextPart the isAutoTextPart_ to set
+	 * @return SendMail
 	 */
-	public SendMail setAutoTextPart(boolean isAutoTextPart_) {
-		this.isAutoTextPart_ = isAutoTextPart_;
+	public SendMail setAutoTextPart(boolean autoTextPart) {
+		this.isAutoTextPart_ = autoTextPart;
 		return this;
 	}
 
 	/**
+	 * 邮件的回复头
+	 * 
 	 * @return the replayTos_
 	 */
 	public HashMap<String, Addr> getReplayTos() {
@@ -1070,15 +1149,17 @@ public class SendMail {
 	/**
 	 * 是否跟踪邮件发送细节
 	 * 
-	 * @param is_mail_debug_ the is_mail_debug_ to set
-	 * @return
+	 * @param mailDebug the is_mail_debug_ to set
+	 * @return SendMail
 	 */
-	public SendMail setIsMailDebug(boolean is_mail_debug) {
-		this.is_mail_debug_ = is_mail_debug;
+	public SendMail setMailDebug(boolean mailDebug) {
+		this.is_mail_debug_ = mailDebug;
 		return this;
 	}
 
 	/**
+	 * 获取最后的错误
+	 * 
 	 * @return the lastError
 	 */
 	public Exception getLastError() {
@@ -1100,21 +1181,25 @@ public class SendMail {
 	 * @param singleToEmail 邮件地址
 	 * @param singleToName  名称
 	 * 
+	 * @return SendMail
 	 */
-	public void setSingleTo(String singleToEmail, String singleToName) {
+	public SendMail setSingleTo(String singleToEmail, String singleToName) {
 		Addr addr = new Addr();
 		addr.setEmail(singleToEmail);
 		addr.setName(singleToName);
 		this.singleTo_ = addr;
+		return this;
 	}
 
 	/**
 	 * 设定邮件内容
 	 * 
-	 * @param mineMessage_ the mineMessage_ to set
+	 * @param mimeMessage the mineMessage_ to set
+	 * @return SendMail
 	 */
-	public void setMimeMessage(MimeMessage mimeMessage) {
+	public SendMail setMimeMessage(MimeMessage mimeMessage) {
 		this.mimeMessage_ = mimeMessage;
+		return this;
 	}
 
 	/**
@@ -1129,10 +1214,12 @@ public class SendMail {
 	/**
 	 * 设置是否用 ssl协议进行发送邮件，端口465默认打开此协议
 	 * 
-	 * @param isSsl
+	 * @param ssl ssl协议进行发送邮件
+	 * @return SendMail
 	 */
-	public void setUseSsl(boolean isSsl) {
-		props.put("mail.smtp.ssl.enable", isSsl);
+	public SendMail setUseSsl(boolean ssl) {
+		props.put("mail.smtp.ssl.enable", ssl);
+		return this;
 	}
 
 }

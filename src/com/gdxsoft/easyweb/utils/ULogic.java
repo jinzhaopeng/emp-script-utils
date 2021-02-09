@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 利用内存数据库进行逻辑运算
+ * 利用HSQLDB 内存数据库进行逻辑运算
  * 
  * @author admin
  *
@@ -58,6 +58,7 @@ public class ULogic {
 
 	/**
 	 * 创建连接
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -71,7 +72,8 @@ public class ULogic {
 	 * 执行表达式
 	 * 
 	 * @param exp
-	 * @return
+	 * @return true/false
+	 * 
 	 */
 	public static boolean runLogic(String exp) {
 		if (exp == null) {

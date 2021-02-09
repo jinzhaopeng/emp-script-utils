@@ -10,7 +10,7 @@ import java.util.Iterator;
  * @author Administrator
  * 
  */
-public class MTable implements Serializable{
+public class MTable implements Serializable {
 
 	/**
 	 * 
@@ -20,8 +20,7 @@ public class MTable implements Serializable{
 	/**
 	 * 从hash表中生成MTable
 	 * 
-	 * @param maps
-	 *            HashMap
+	 * @param maps HashMap
 	 * @return MTable
 	 */
 	public static MTable instanceOf(HashMap<Object, Object> maps) {
@@ -40,11 +39,9 @@ public class MTable implements Serializable{
 	 * equlsString 为"="，splitString为 "&"<br>
 	 * 结果是 name=张三&id=123&address=北京海淀区
 	 * 
-	 * @param equlsString
-	 *            key和value直接的连接字符串
-	 * @param splitString
-	 *            不同值之间的分隔字符串
-	 * @return
+	 * @param equlsString key和value直接的连接字符串
+	 * @param splitString 不同值之间的分隔字符串
+	 * @return 连接成字符串
 	 */
 	public String join(String equlsString, String splitString) {
 		MStr s = new MStr();
@@ -67,10 +64,8 @@ public class MTable implements Serializable{
 	/**
 	 * 连接两个hash表，如果isOverWrite = true则强制替换已有的值
 	 * 
-	 * @param table
-	 *            MTable
-	 * @param isOverWrite
-	 *            是否强制替换
+	 * @param table       MTable
+	 * @param isOverWrite 是否强制替换
 	 */
 	public void conact(MTable table, boolean isOverWrite) {
 		if (table == null)
@@ -81,10 +76,8 @@ public class MTable implements Serializable{
 	/**
 	 * 连接两个hash表，如果isOverWrite = true则强制替换已有的值
 	 * 
-	 * @param maps
-	 *            HashMap
-	 * @param isOverWrite
-	 *            是否强制替换
+	 * @param maps        HashMap
+	 * @param isOverWrite 是否强制替换
 	 */
 	public void conact(HashMap<Object, Object> maps, boolean isOverWrite) {
 		if (maps == null)
@@ -119,10 +112,16 @@ public class MTable implements Serializable{
 		_Keys.clear();
 	}
 
+	/**
+	 * 清空
+	 */
 	public void clear() {
 		this.reset();
 	}
 
+	/**
+	 * 排序
+	 */
 	public void sort() {
 		this._Keys.sort();
 	}
@@ -130,22 +129,18 @@ public class MTable implements Serializable{
 	/**
 	 * 增加对象
 	 * 
-	 * @param key
-	 * @param val
+	 * @param key 对象的key
+	 * @param val 对象
 	 */
 	public void put(Object key, Object val) {
 		this.add(key, val);
 	}
 
-	public boolean containsKey(Object key) {
-		return this._Table.containsKey(key);
-	}
-
 	/**
 	 * 增加对象
 	 * 
-	 * @param key
-	 * @param val
+	 * @param key 对象的key
+	 * @param val 对象
 	 */
 	public void add(Object key, Object val) {
 		if (_Table.containsKey(key)) {
@@ -159,9 +154,20 @@ public class MTable implements Serializable{
 	}
 
 	/**
+	 * 对象是否包含key
+	 * 
+	 * @param key 对象的key
+	 * @return true/false
+	 */
+	public boolean containsKey(Object key) {
+		return this._Table.containsKey(key);
+	}
+
+	/**
 	 * 根据索引移除对象
 	 * 
-	 * @param index
+	 * @param index 索引
+	 * @return 移除的对象
 	 */
 	public Object removeAt(int index) {
 		Object key;
@@ -178,7 +184,8 @@ public class MTable implements Serializable{
 	/**
 	 * 根据Key值移除对象
 	 * 
-	 * @param key
+	 * @param key 对象的key
+	 * @return 移除的对象
 	 */
 	public Object removeKey(Object key) {
 		if (this._Table.containsKey(key)) {
@@ -191,28 +198,58 @@ public class MTable implements Serializable{
 		}
 	}
 
+	/**
+	 * 对象数量
+	 * 
+	 * @return 数量
+	 */
 	public int size() {
 		return this._Table.size();
 	}
 
-	public Object getKey(int index) {
-		return this._Keys.get(index);
-	}
-
-	public Object getByIndex(int index) {
-		Object key = this._Keys.get(index);
-		return this._Table.get(key);
-	}
-
-	public Object get(Object key) {
-		return this._Table.get(key);
-	}
-
+	/**
+	 * 对象数量
+	 * 
+	 * @return 数量
+	 */
 	public int getCount() {
 		return this._Table.size();
 	}
 
 	/**
+	 * 获取对象的key
+	 * 
+	 * @param index 索引
+	 * @return 对象的key
+	 */
+	public Object getKey(int index) {
+		return this._Keys.get(index);
+	}
+
+	/**
+	 * 获取对象
+	 * 
+	 * @param index 索引
+	 * @return 对象
+	 */
+	public Object getByIndex(int index) {
+		Object key = this._Keys.get(index);
+		return this._Table.get(key);
+	}
+
+	/**
+	 * 获取对象
+	 * 
+	 * @param key 对象的key
+	 * @return 对象
+	 */
+	public Object get(Object key) {
+		return this._Table.get(key);
+	}
+
+	/**
+	 * 返回map
+	 * 
 	 * @return the _Table
 	 */
 	public HashMap<Object, Object> getTable() {

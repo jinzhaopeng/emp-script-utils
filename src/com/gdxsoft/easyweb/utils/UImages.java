@@ -42,6 +42,12 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 处理图片
+ * 
+ * @author admin
+ *
+ */
 public class UImages {
 	private static Logger LOGGER = LoggerFactory.getLogger(UImages.class);
 
@@ -52,11 +58,11 @@ public class UImages {
 	 * @param logo          logo图片
 	 * @param logoMaxWidth  最大宽度
 	 * @param logoMaxHeight 最大高度
-	 * @return
+	 * @return 添加logo的图片
 	 * @throws IOException
 	 */
-	public static BufferedImage appendLogo(BufferedImage originalImage, BufferedImage logo, int logoMaxWidth, int logoMaxHeight)
-			throws IOException {
+	public static BufferedImage appendLogo(BufferedImage originalImage, BufferedImage logo, int logoMaxWidth,
+			int logoMaxHeight) throws IOException {
 
 		Graphics2D g = originalImage.createGraphics();
 
@@ -94,14 +100,15 @@ public class UImages {
 	/**
 	 * 图片设置圆角
 	 * 
-	 * @param srcImage
-	 * @param radius
-	 * @param border
-	 * @param padding
-	 * @return
+	 * @param srcImage 来源图
+	 * @param radius   圆角长度
+	 * @param border   边宽
+	 * @param padding  填充
+	 * @return 处理后的 图片
 	 * @throws IOException
 	 */
-	public static BufferedImage setRadius(BufferedImage srcImage, int radius, int border, int padding) throws IOException {
+	public static BufferedImage setRadius(BufferedImage srcImage, int radius, int border, int padding)
+			throws IOException {
 		int width = srcImage.getWidth();
 		int height = srcImage.getHeight();
 		int canvasWidth = width + padding * 2;
@@ -133,6 +140,15 @@ public class UImages {
 		return image;
 	}
 
+	/**
+	 * 创建背景图？
+	 * 
+	 * @param srcImage 图片
+	 * @param radius   圆角
+	 * @param border   边宽
+	 * @param padding  填充
+	 * @return 图
+	 */
 	public static BufferedImage createBackground(BufferedImage srcImage, int radius, int border, int padding) {
 		int width = srcImage.getWidth();
 		int height = srcImage.getHeight();
@@ -163,9 +179,9 @@ public class UImages {
 	/**
 	 * 图片切圆角
 	 * 
-	 * @param srcImage
-	 * @param radius
-	 * @return
+	 * @param srcImage 原始图
+	 * @param radius   圆角
+	 * @return 图
 	 */
 	public static BufferedImage setClip(BufferedImage srcImage, int radius) {
 		int width = srcImage.getWidth();
@@ -210,9 +226,9 @@ public class UImages {
 	/**
 	 * 用java原生创建缩略图
 	 * 
-	 * @param imgPath
-	 * @param d
-	 * @return
+	 * @param imgPath 图片路径
+	 * @param d       图片尺寸数组(800x600, 400x300)...
+	 * @return 创建后的图片文件的数组
 	 * @throws Exception
 	 */
 	public static File[] createResizedByJava(String imgPath, java.awt.Dimension[] d) throws Exception {
@@ -288,9 +304,9 @@ public class UImages {
 	/**
 	 * 使用ImageMagick处理缩率图
 	 * 
-	 * @param imgPath
-	 * @param d
-	 * @return
+	 * @param imgPath 图片路径
+	 * @param d       图片尺寸数组(800x600, 400x300)...
+	 * @return 创建后的图片文件的数组
 	 * @throws Exception
 	 */
 	public static File[] createResizedByImageMagick(String imgPath, java.awt.Dimension[] d) throws Exception {
@@ -351,9 +367,9 @@ public class UImages {
 	/**
 	 * 生成新尺寸图片，保持比例
 	 * 
-	 * @param imgPath
-	 * @param d       尺寸列表
-	 * @return
+	 * @param imgPath 源图片路径
+	 * @param d       图片尺寸数组(800x600, 400x300)...
+	 * @return 创建后的图片文件的数组
 	 * @throws Exception
 	 */
 	public static File[] createResized(String imgPath, java.awt.Dimension[] d) throws Exception {
@@ -377,9 +393,9 @@ public class UImages {
 	/**
 	 * 利用 net.coobird.thumbnailator.Thumbnails， 生成新尺寸图片，保持比例
 	 * 
-	 * @param imgPath
-	 * @param d       尺寸列表
-	 * @return
+	 * @param imgPath 图片路径
+	 * @param d       图片尺寸数组(800x600, 400x300)...
+	 * @return 创建后的图片文件的数组
 	 * @throws Exception
 	 */
 	public static File[] createResizedByThumbnails(String imgPath, java.awt.Dimension[] d) {
@@ -409,8 +425,8 @@ public class UImages {
 	/**
 	 * 读取图片
 	 * 
-	 * @param imgPath
-	 * @return
+	 * @param imgPath 图片路径
+	 * @return BufferedImage 图片
 	 * @throws IOException
 	 */
 	public static BufferedImage getBufferedImage(String imgPath) throws IOException {
@@ -426,8 +442,8 @@ public class UImages {
 	/**
 	 * 转换为 BufferedImage
 	 * 
-	 * @param image
-	 * @return
+	 * @param image 图片
+	 * @return BufferedImage
 	 */
 	public static BufferedImage toBufferedImage(Image image) {
 		if (image instanceof BufferedImage) {
@@ -461,8 +477,8 @@ public class UImages {
 	/**
 	 * 保存图片(jpeg, 质量 0.8)
 	 * 
-	 * @param buf
-	 * @param name
+	 * @param buf  图片BufferedImage
+	 * @param name 路径
 	 * @throws IOException
 	 */
 	public static void imageSave(BufferedImage buf, String name) throws IOException {
@@ -473,8 +489,8 @@ public class UImages {
 	/**
 	 * 保存图片(jpeg, 质量 0.8)
 	 * 
-	 * @param buf
-	 * @param f1
+	 * @param buf 图片BufferedImage
+	 * @param f1  文件
 	 * @throws IOException
 	 */
 	public static void imageSave(BufferedImage buf, File f1) throws IOException {
@@ -493,14 +509,15 @@ public class UImages {
 	 * @param originalImage 原始图像
 	 * @param width         宽度
 	 * @param height        高度
-	 * @return
+	 * @return 图片BufferedImage
 	 */
 	public static BufferedImage createResizedCopy(Image originalImage, int width, int height) {
 		BufferedImage scaledBI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = scaledBI.createGraphics();
 
 		// 保持Png图片的透明背景属性
-		BufferedImage bufIma = g.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+		BufferedImage bufIma = g.getDeviceConfiguration().createCompatibleImage(width, height,
+				Transparency.TRANSLUCENT);
 		Graphics2D g1 = bufIma.createGraphics();
 
 		g1.setComposite(AlphaComposite.Src);
@@ -515,17 +532,18 @@ public class UImages {
 	 * 裁剪图片
 	 * 
 	 * @param originalImage 原始图片
-	 * @param left
-	 * @param top
-	 * @param right
-	 * @param bottom
-	 * @return
+	 * @param left          左
+	 * @param top           头
+	 * @param right         右
+	 * @param bottom        底
+	 * @return 图片BufferedImage
 	 */
 	public static BufferedImage createClipCopy(Image originalImage, int left, int top, int right, int bottom) {
 		int width = right - left;
 		int height = bottom - top;
 		ImageFilter cropFilter = new CropImageFilter(left, top, width, height);
-		Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(originalImage.getSource(), cropFilter));
+		Image img = Toolkit.getDefaultToolkit()
+				.createImage(new FilteredImageSource(originalImage.getSource(), cropFilter));
 		BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = tag.getGraphics();
 		g.drawImage(img, 0, 0, null); // 绘制小图
@@ -536,9 +554,9 @@ public class UImages {
 	/**
 	 * 获取 BufferedImage的图像二进制
 	 * 
-	 * @param bi
+	 * @param bi        图片BufferedImage
 	 * @param imageType 图像类型JPEG, PNG ...
-	 * @return
+	 * @return 文件二进制
 	 */
 	public static byte[] getBytes(BufferedImage bi, String imageType, float quality) {
 		ByteArrayOutputStream output = new ByteArrayOutputStream(10240);
@@ -585,8 +603,8 @@ public class UImages {
 	/**
 	 * 命令行执行ImageMagick
 	 * 
-	 * @param line
-	 * @return
+	 * @param line 命令行
+	 * @return 执行结果
 	 */
 	private static HashMap<String, String> runImageMagick(String line) {
 		HashMap<String, String> rst = new HashMap<String, String>();

@@ -60,7 +60,7 @@ public class UFormat {
 	 * 返回年龄 当前年-出生年
 	 * 
 	 * @param dbo 出生日期
-	 * @return
+	 * @return 年龄
 	 */
 	public static String formatAge(Object dbo) {
 		if (dbo == null)
@@ -90,9 +90,9 @@ public class UFormat {
 	/**
 	 * 格式化为星期
 	 * 
-	 * @param oriValue
-	 * @param lang
-	 * @return
+	 * @param oriValue 字符串或日期
+	 * @param lang     enus 或 zhcn
+	 * @return 星期几
 	 * @throws Exception
 	 */
 	public static String formatWeek(Object oriValue, String lang) throws Exception {
@@ -121,7 +121,8 @@ public class UFormat {
 	/**
 	 * 格式化日期
 	 * 
-	 * @param toFormat 格式 date,dateTime,time,dateShortTime,shortTime,shortDate，week 大小写无关
+	 * @param toFormat 格式 date,dateTime,time,dateShortTime,shortTime,shortDate，week
+	 *                 大小写无关
 	 * @param oriValue 来源数据，日期或字符型
 	 * @param lang     语言 enus 或 zhcn
 	 * @return 格式化后的字符
@@ -132,13 +133,13 @@ public class UFormat {
 			return null;
 		if (toFormat == null || toFormat.trim().length() == 0)
 			return oriValue.toString();
-		
+
 		String f = toFormat.trim().toLowerCase();
-		
-		if("week".equals(f)) {
+
+		if ("week".equals(f)) {
 			return formatWeek(oriValue, lang);
 		}
-		
+
 		String cName = oriValue.getClass().getName().toUpperCase();
 
 		String sDate = null;
@@ -206,8 +207,8 @@ public class UFormat {
 	/**
 	 * 格式化为整型
 	 * 
-	 * @param oriValue
-	 * @return
+	 * @param oriValue 原始数据
+	 * @return 整型字符串
 	 */
 	public static String formatInt(Object oriValue) {
 		if (oriValue == null)
@@ -220,13 +221,13 @@ public class UFormat {
 	/**
 	 * 格式化为货币型
 	 * 
-	 * @param oriValue
-	 * @return
+	 * @param oriValue 原始数据
+	 * @return 小数点2位货币表达式
 	 */
 	public static String formatMoney(Object oriValue) {
 		if (oriValue == null)
 			return null;
-        String sv = oriValue.toString();
+		String sv = oriValue.toString();
 		try {
 			double number = Double.parseDouble(sv.replace(",", ""));
 
@@ -248,8 +249,8 @@ public class UFormat {
 	/**
 	 * 格式为百分数
 	 * 
-	 * @param oriValue
-	 * @return
+	 * @param oriValue 原始数据
+	 * @return 百分比
 	 * @throws Exception
 	 */
 	public static String formatPercent(Object oriValue) throws Exception {
@@ -264,8 +265,8 @@ public class UFormat {
 	/**
 	 * 格式化为有逗号分隔的数字，并清除小数末尾的0，最多保留4位小数
 	 * 
-	 * @param oriValue
-	 * @return
+	 * @param oriValue 数据
+	 * @return 格式化为有逗号分隔的数字，并清除小数末尾的0，最多保留4位小数
 	 * @throws Exception
 	 */
 	public static String formatNumberClearZero(Object oriValue) throws Exception {
@@ -286,8 +287,8 @@ public class UFormat {
 	/**
 	 * 清除小数末尾的0，最多保留4位小数
 	 * 
-	 * @param oriValue
-	 * @return
+	 * @param oriValue 数据
+	 * @return 清除小数末尾的0，最多保留4位小数
 	 * @throws Exception
 	 */
 	public static String formatDecimalClearZero(Object oriValue) throws Exception {

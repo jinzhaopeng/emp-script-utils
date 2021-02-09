@@ -31,7 +31,7 @@ public class UFile {
 	 * 根据二进制流，获取文件扩展名
 	 * 
 	 * @param buf
-	 * @return
+	 * @return 文件扩展名
 	 */
 	public static String getExtFromFileBytes(byte[] buf) {
 		if (buf.length < 120) {
@@ -78,7 +78,7 @@ public class UFile {
 	 * 删除文件
 	 * 
 	 * @param name
-	 * @return
+	 * @return 删除结果
 	 */
 	public static boolean delete(String name) {
 		if (name == null || name.trim().length() == 0) {
@@ -100,7 +100,7 @@ public class UFile {
 	 * 获取文件扩展名
 	 * 
 	 * @param name
-	 * @return
+	 * @return 扩展名
 	 */
 	public static String getFileExt(String name) {
 		int m = name.lastIndexOf(".");
@@ -118,7 +118,7 @@ public class UFile {
 	 * 获取文件名，没有扩展名
 	 * 
 	 * @param name
-	 * @return
+	 * @return 文件名，没有扩展名
 	 */
 	public static String getFileNoExt(String name) {
 		File f = new File(name);
@@ -136,7 +136,7 @@ public class UFile {
 	 * 
 	 * @param name   文件名包括目录
 	 * @param newExt 扩展名
-	 * @return
+	 * @return 替换文件名的扩展名
 	 */
 	public static String changeFileExt(String name, String newExt) {
 		File f = new File(name);
@@ -148,9 +148,10 @@ public class UFile {
 
 	/**
 	 * 根据过滤器，获取文件
-	 * @param rootPath
-	 * @param filter
-	 * @return
+	 * 
+	 * @param rootPath 父级目录
+	 * @param filter   过滤器
+	 * @return 获取文件数组
 	 */
 	public static File[] getFiles(String rootPath, String[] filter) {
 		File f = new File(rootPath);
@@ -162,6 +163,13 @@ public class UFile {
 		return f.listFiles(ff);
 	}
 
+	/**
+	 * 读取文件并转换为 GZIP 压缩的base64字符串
+	 * 
+	 * @param path 文件路径
+	 * @return 转换为 GZIP 压缩的base64字符串
+	 * @throws IOException
+	 */
 	public static String readFileGzipBase64(String path) throws IOException {
 		int BUFFER = 4096;
 		BufferedInputStream origin = null;
@@ -188,6 +196,13 @@ public class UFile {
 		return s1;
 	}
 
+	/**
+	 * 读取文件并转换为 base64字符串
+	 * 
+	 * @param path 文件路径
+	 * @return 文件的base64字符串
+	 * @throws Exception
+	 */
 	public static String readFileBase64(String path) throws Exception {
 		byte[] buf = readFileBytes(path);
 		String s1 = UConvert.ToBase64String(buf);
@@ -197,12 +212,11 @@ public class UFile {
 	/**
 	 * 读取二进制文件内容
 	 * 
-	 * @param path
-	 * @return
+	 * @param path 文件路径
+	 * @return 文件二进制
 	 * @throws Exception
 	 */
 	public static byte[] readFileBytes(String path) throws Exception {
-
 		File file = new File(path);
 		if (file.exists()) { // 按照文件读取
 			FileInputStream fi = null;
@@ -244,10 +258,10 @@ public class UFile {
 	}
 
 	/**
-	 * 读取文本文件内容
+	 * 读取UTF8格式的文件内容
 	 * 
-	 * @param filePath
-	 * @return
+	 * @param filePath 文件路径
+	 * @return 文本
 	 * @throws IOException
 	 */
 	public static String readFileText(String filePath) throws Exception {
@@ -288,6 +302,13 @@ public class UFile {
 		out.close();
 	}
 
+	/**
+	 * ZIP 压缩文件
+	 * 
+	 * @param filePath 文件路径
+	 * @return zip文件
+	 * @throws IOException
+	 */
 	public static String zipFile(String filePath) throws IOException {
 		int BUFFER = 4096;
 		String zipFileName = filePath + ".zip";
@@ -313,8 +334,8 @@ public class UFile {
 	/**
 	 * 压缩目录，只支持一级目录
 	 * 
-	 * @param path
-	 * @return
+	 * @param path 目录
+	 * @return zipFileName
 	 * @throws IOException
 	 */
 	public static String zipPath(String path) throws IOException {
@@ -339,7 +360,7 @@ public class UFile {
 	 * 压缩目录及所有文件
 	 * 
 	 * @param pathRoot    根目录
-	 * @param zipFileName
+	 * @param zipFileName zip文件
 	 * @throws IOException
 	 */
 	public static void zipPaths(String pathRoot, String zipFileName) throws IOException {
@@ -353,9 +374,9 @@ public class UFile {
 	/**
 	 * 递归压缩目录文件
 	 * 
-	 * @param out
-	 * @param parent
-	 * @param rootPath
+	 * @param out      ZipOutputStream
+	 * @param parent   根目录
+	 * @param rootPath 在zip文件里根目录
 	 * @throws IOException
 	 */
 	private static void zipPathFiles(ZipOutputStream out, File parent, String rootPath) throws IOException {
@@ -382,6 +403,13 @@ public class UFile {
 		}
 	}
 
+	/**
+	 * 压缩文件
+	 * 
+	 * @param files       文件数组
+	 * @param zipFileName 输出的zip文件名
+	 * @throws IOException
+	 */
 	public static void zipFiles(File[] files, String zipFileName) throws IOException {
 		int BUFFER = 4096;
 		FileOutputStream dest = new FileOutputStream(zipFileName);
@@ -544,9 +572,9 @@ public class UFile {
 	/**
 	 * 根据二进制md5, 生成二进制文件，
 	 * 
-	 * @param bytes
-	 * @param ext
-	 * @param path
+	 * @param bytes       二进制
+	 * @param ext         扩展名
+	 * @param path        路径
 	 * @param isOverWrite 是否覆盖文件
 	 * @return 生成的文件名（不包含路径）
 	 * @throws Exception
@@ -560,8 +588,8 @@ public class UFile {
 	/**
 	 * 得到文件的md5标记
 	 * 
-	 * @param file
-	 * @return
+	 * @param file 文件
+	 * @return md5
 	 */
 	public static String createMd5(File file) {
 		try {
@@ -572,6 +600,17 @@ public class UFile {
 		}
 	}
 
+	/**
+	 * 创建 二进制文件，文件名是文件的md5
+	 * 
+	 * @param bytes       二进制
+	 * @param md5         文件的md5
+	 * @param ext         扩展名
+	 * @param path        路径
+	 * @param isOverWrite 是否覆盖
+	 * @return 创建的文件名 md5 + "." + ext
+	 * @throws Exception
+	 */
 	public static String createMd5File(byte[] bytes, String md5, String ext, String path, boolean isOverWrite)
 			throws Exception {
 
@@ -659,7 +698,7 @@ public class UFile {
 	 * 
 	 * @param name 原始文件名
 	 * @param len  分割长度
-	 * @return
+	 * @return 分割后的名称
 	 */
 	public static String createSplitDirPath(String name, int len) {
 		if (name == null || name.length() <= len) {
@@ -692,7 +731,7 @@ public class UFile {
 	 * 建立路径
 	 * 
 	 * @param path 路径
-	 * @return
+	 * @return 是否建立成功
 	 */
 	public static boolean buildPaths(String path) {
 		File dir = new File(path);

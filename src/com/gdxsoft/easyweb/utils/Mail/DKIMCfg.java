@@ -9,10 +9,6 @@ package com.gdxsoft.easyweb.utils.Mail;
  *
  */
 public class DKIMCfg {
-
-	public DKIMCfg() {
-	}
-
 	private String domain_;
 	private String select_ = "default";
 	private String privateKeyPath_;
@@ -29,8 +25,7 @@ public class DKIMCfg {
 	/**
 	 * DKIM签名的域名
 	 * 
-	 * @param domain_
-	 *            the domain_ to set
+	 * @param domain the domain_ to set
 	 */
 	public void setDomain(String domain) {
 		this.domain_ = domain;
@@ -48,8 +43,7 @@ public class DKIMCfg {
 	/**
 	 * DKIM签名的选择域
 	 * 
-	 * @param select_
-	 *            the select_ to set
+	 * @param select the select_ to set
 	 */
 	public void setSelect(String select) {
 		this.select_ = select;
@@ -75,8 +69,7 @@ public class DKIMCfg {
 	 * <b>openssl pkcs8 -topk8 -nocrypt -in private.key.pem -out private.key.der
 	 * -outform der</b>
 	 * 
-	 * @param privateKeyPath_
-	 *            the privateKeyPath_ to set
+	 * @param privateKeyPath the privateKeyPath_ to set
 	 */
 	public void setPrivateKeyPath(String privateKeyPath) {
 		this.privateKeyPath_ = privateKeyPath;

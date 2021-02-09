@@ -22,7 +22,7 @@ public class UMail {
 	/**
 	 * 获取MailSession
 	 * 
-	 * @return
+	 * @return MailSession
 	 */
 	public static Session getMailSession() {
 		Properties props = new Properties();
@@ -50,7 +50,7 @@ public class UMail {
 	 * @param to      收件人
 	 * @param subject 主题
 	 * @param content 内容
-	 * @return
+	 * @return message
 	 * @throws UnsupportedEncodingException
 	 * @throws MessagingException
 	 */
@@ -70,7 +70,7 @@ public class UMail {
 	 * @param content  内容
 	 * @param atts     附件
 	 * @param charset  语言
-	 * @return
+	 * @return message
 	 * @throws MessagingException
 	 * @throws UnsupportedEncodingException
 	 */
@@ -112,7 +112,7 @@ public class UMail {
 	 * @param content      邮件内容
 	 * @param atts         附件文件路径数组
 	 * @param charset      邮件编码
-	 * @return
+	 * @return message
 	 * @throws MessagingException
 	 * @throws UnsupportedEncodingException
 	 */
@@ -145,7 +145,7 @@ public class UMail {
 	 * @param content      邮件内容
 	 * @param atts         附件文件路径数组
 	 * @param charset      邮件编码
-	 * @return
+	 * @return SendMail
 	 */
 	public static SendMail createSendMail(String from, String fromName, String[] tos, String[] toNames, String[] ccs,
 			String[] ccNames, String[] bccs, String[] bccNames, String[] replyTos, String[] replyToNames, String sender,
@@ -191,7 +191,7 @@ public class UMail {
 	 * 根据邮件地址获取 Dkim 配置
 	 * 
 	 * @param email 邮件
-	 * @return
+	 * @return DKIMCfg
 	 */
 	public static DKIMCfg getDKIMCfgByEmail(String email) {
 		if (UPath.getDKIM_CFGS().size() == 0) {
@@ -205,7 +205,7 @@ public class UMail {
 	 * 根据域名获取 Dkim 配置
 	 * 
 	 * @param domain 域名
-	 * @return
+	 * @return DKIMCfg
 	 */
 	public static DKIMCfg getDKIMCfgByDomain(String domain) {
 		if (domain == null || domain.trim().length() == 0 || UPath.getDKIM_CFGS().size() == 0) {
@@ -239,7 +239,7 @@ public class UMail {
 	 * @param content      邮件内容
 	 * @param atts         附件文件路径数组
 	 * @param charset      邮件编码
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String fromName, String[] tos, String[] toNames, String[] ccs,
 			String[] ccNames, String[] bccs, String[] bccNames, String[] replyTos, String[] replyToNames, String sender,
@@ -266,7 +266,7 @@ public class UMail {
 	 * @param subject      邮件标题
 	 * @param content      正文
 	 * @param atts         附件文件路径数组
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String fromName, String tos, String toNames, String replyTos,
 			String replyToNames, String subject, String content, String[] atts, String charset) {
@@ -307,7 +307,7 @@ public class UMail {
 	 * @param toNames  收件人姓名，多个收件人姓名用“,”分割
 	 * @param subject  主题
 	 * @param content  内容
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String fromName, String tos, String toNames, String subject,
 			String content) {
@@ -324,7 +324,7 @@ public class UMail {
 	 * @param subject  主题
 	 * @param content  内容
 	 * @param atts     附件文件路径数组
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String fromName, String tos, String toNames, String subject,
 			String content, String[] atts) {
@@ -339,7 +339,7 @@ public class UMail {
 	 * @param subject 主题
 	 * @param content 内容
 	 * @param atts    附件文件路径数组
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String tos, String subject, String content, String[] atts) {
 		return sendHtmlMail(from, "", tos, "", subject, content, atts, "utf-8");
@@ -352,7 +352,7 @@ public class UMail {
 	 * @param tos     收件人邮件，多个收件人用“,”分割
 	 * @param subject 主题
 	 * @param content 内容
-	 * @return
+	 * @return result
 	 */
 	public static String sendHtmlMail(String from, String tos, String subject, String content) {
 		return sendHtmlMail(from, "", tos, "", subject, content, null, "utf-8");
@@ -362,7 +362,7 @@ public class UMail {
 	 * 发送邮件
 	 * 
 	 * @param mm
-	 * @return
+	 * @return result
 	 */
 	public static String sendMail(Message mm) {
 		Session mailSession = getMailSession();
