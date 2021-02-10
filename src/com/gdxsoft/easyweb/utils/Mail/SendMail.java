@@ -6,28 +6,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.Address;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.Address;
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.internet.MimeUtility;
 
 import com.gdxsoft.easyweb.utils.UMail;
 import com.gdxsoft.easyweb.utils.Utils;
-
-import de.agitos.dkim.DKIMSigner;
-import de.agitos.dkim.DKIMSignerException;
-import de.agitos.dkim.SMTPDKIMMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -926,7 +922,7 @@ public class SendMail {
 	 * @throws MessagingException
 	 * @throws DKIMSignerException
 	 */
-	public MimeMessage dkimSign(MimeMessage mm) throws MessagingException, DKIMSignerException {
+	public MimeMessage dkimSign(MimeMessage mm) throws Exception {
 		if (this.dkimSigner_ != null) {
 			dkimSigner_.setIdentity(this.from_.getEmail());
 			mm = new SMTPDKIMMessage(mm, dkimSigner_);

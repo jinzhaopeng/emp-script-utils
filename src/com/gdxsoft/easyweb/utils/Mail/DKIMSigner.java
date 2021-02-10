@@ -1,36 +1,13 @@
-/* 
- * Copyright 2008 The Apache Software Foundation or its licensors, as
- * applicable.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * A licence was granted to the ASF by Florian Sager on 30 November 2008
- */
 
-package de.agitos.dkim;
+package com.gdxsoft.easyweb.utils.Mail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.SignatureException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
@@ -38,31 +15,30 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import jakarta.mail.MessagingException;
 
+import com.gdxsoft.easyweb.utils.UDigest;
+import com.gdxsoft.easyweb.utils.URsa;
 import com.sun.mail.util.CRLFOutputStream;
 
 /*
- * Main class providing a signature according to DKIM RFC 4871.
+ *   DKIM RFC 4871.
  * 
- * @author Florian Sager, http://www.agitos.de, 15.10.2008
  */
 
 public class DKIMSigner {
 
-	private static String DKIMSIGNATUREHEADER = "DKIM-Signature";
 	private static int MAXHEADERLENGTH = 67;
 
-	private static ArrayList<String> minimumHeadersToSign = new ArrayList<String>();
-	static {
-		minimumHeadersToSign.add("From");
-		minimumHeadersToSign.add("To");
-		minimumHeadersToSign.add("Subject");
-	}
+	/**
+	 * 最小的签名包含的字段列表
+	 */
+	private static String[] miniHeaders = "From,To,Subject".split(",");
 
 	private String[] defaultHeadersToSign = new String[] { "Content-Description", "Content-ID", "Content-Type",
 			"Content-Transfer-Encoding", "Cc", "Date", "From", "In-Reply-To", "List-Subscribe", "List-Post",
@@ -70,17 +46,16 @@ public class DKIMSigner {
 			"Resent-Sender", "Resent-Cc", "Resent-Date", "Resent-To", "Reply-To", "References", "Resent-Message-ID",
 			"Resent-From", "Sender", "Subject", "To" };
 
-	private SigningAlgorithm signingAlgorithm = SigningAlgorithm.SHA256withRSA; // use rsa-sha256 by default, see RFC
-																				// 4871
-	private Signature signatureService;
-	private MessageDigest messageDigest;
+	private DKIMAlgorithm signingAlgorithm = DKIMAlgorithm.rsa_sha256; // use rsa-sha256 by default, see RFC
+																		// 4871
+	private URsa rsa;
 	private String signingDomain;
 	private String selector;
 	private String identity = null;
 	private boolean lengthParam = false;
 	private boolean zParam = false;
-	private Canonicalization headerCanonicalization = Canonicalization.RELAXED;
-	private Canonicalization bodyCanonicalization = Canonicalization.SIMPLE;
+	private IDKIMCanonicalization headerCanonicalization = new DKIMCanonicalizationRelaxedImpl();
+	private IDKIMCanonicalization bodyCanonicalization = new DKIMCanonicalizationSimpleImpl();
 	private PrivateKey privkey;
 
 	/**
@@ -105,21 +80,34 @@ public class DKIMSigner {
 	 */
 	public DKIMSigner(String signingDomain, String selector, String privkeyFilename) throws Exception {
 
-		File privKeyFile = new File(privkeyFilename);
+		this.signingDomain = signingDomain;
+		this.selector = selector.trim();
+		
+		DKIMAlgorithm algorithm = this.signingAlgorithm;
+		
+		this.rsa = new URsa();
+		this.rsa.initPrivateKey(privkeyFilename);
+		
+		// 摘要算法
+		this.rsa.setDigestAlgorithm(algorithm.getJavaHashNotation());
+		// 签名算法
+		this.rsa.setSignAlgorithm(algorithm.getJavaSecNotation());
 
-		// read private key DER file
-		DataInputStream dis = new DataInputStream(new FileInputStream(privKeyFile));
-		byte[] privKeyBytes = new byte[(int) privKeyFile.length()];
-		dis.read(privKeyBytes);
-		dis.close();
-
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-		// decode private key
-		PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(privKeyBytes);
-		RSAPrivateKey privKey = (RSAPrivateKey) keyFactory.generatePrivate(privSpec);
-
-		initDKIMSigner(signingDomain, selector, privKey);
+		/*
+		 * File privKeyFile = new File(privkeyFilename);
+		 * 
+		 * // read private key DER file DataInputStream dis = new DataInputStream(new
+		 * FileInputStream(privKeyFile)); byte[] privKeyBytes = new byte[(int)
+		 * privKeyFile.length()]; dis.read(privKeyBytes); dis.close();
+		 * 
+		 * KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		 * 
+		 * // decode private key PKCS8EncodedKeySpec privSpec = new
+		 * PKCS8EncodedKeySpec(privKeyBytes); RSAPrivateKey privKey = (RSAPrivateKey)
+		 * keyFactory.generatePrivate(privSpec);
+		 * 
+		 * initDKIMSigner(signingDomain, selector, privKey);
+		 */
 	}
 
 	/**
@@ -128,12 +116,12 @@ public class DKIMSigner {
 	 * @param signingDomain 域名
 	 * @param selector      选择
 	 * @param privkey       私匙
-	 * @throws DKIMSignerException
+	 * @throws Exception
 	 */
-	private void initDKIMSigner(String signingDomain, String selector, PrivateKey privkey) throws DKIMSignerException {
+	private void initDKIMSigner(String signingDomain, String selector, PrivateKey privkey) throws Exception {
 
 		if (!DKIMUtil.isValidDomain(signingDomain)) {
-			throw new DKIMSignerException(signingDomain + " is an invalid signing domain");
+			throw new Exception(signingDomain + " is an invalid signing domain");
 		}
 
 		this.signingDomain = signingDomain;
@@ -144,6 +132,7 @@ public class DKIMSigner {
 
 	/**
 	 * 获取 identity
+	 * 
 	 * @return identity
 	 */
 	public String getIdentity() {
@@ -152,15 +141,16 @@ public class DKIMSigner {
 
 	/**
 	 * 设置 identity
+	 * 
 	 * @param identity
-	 * @throws DKIMSignerException
+	 * @throws Exception
 	 */
-	public void setIdentity(String identity) throws DKIMSignerException {
+	public void setIdentity(String identity) throws Exception {
 
 		if (identity != null) {
 			identity = identity.trim();
 			if (!identity.endsWith("@" + signingDomain) && !identity.endsWith("." + signingDomain)) {
-				throw new DKIMSignerException(
+				throw new Exception(
 						"The domain part of " + identity + " has to be " + signingDomain + " or its subdomain");
 			}
 		}
@@ -168,19 +158,19 @@ public class DKIMSigner {
 		this.identity = identity;
 	}
 
-	public Canonicalization getBodyCanonicalization() {
+	public IDKIMCanonicalization getBodyCanonicalization() {
 		return bodyCanonicalization;
 	}
 
-	public void setBodyCanonicalization(Canonicalization bodyCanonicalization) throws DKIMSignerException {
+	public void setBodyCanonicalization(IDKIMCanonicalization bodyCanonicalization) throws Exception {
 		this.bodyCanonicalization = bodyCanonicalization;
 	}
 
-	public Canonicalization getHeaderCanonicalization() {
+	public IDKIMCanonicalization getHeaderCanonicalization() {
 		return headerCanonicalization;
 	}
 
-	public void setHeaderCanonicalization(Canonicalization headerCanonicalization) throws DKIMSignerException {
+	public void setHeaderCanonicalization(IDKIMCanonicalization headerCanonicalization) throws Exception {
 		this.headerCanonicalization = headerCanonicalization;
 	}
 
@@ -246,37 +236,33 @@ public class DKIMSigner {
 		zParam = param;
 	}
 
-	public SigningAlgorithm getSigningAlgorithm() {
+	public DKIMAlgorithm getSigningAlgorithm() {
 		return signingAlgorithm;
 	}
 
-	public void setSigningAlgorithm(SigningAlgorithm signingAlgorithm) throws DKIMSignerException {
+	/**
+	 * 设置算法
+	 * 
+	 * @param algorithm
+	 * @throws Exception
+	 */
+	public void setSigningAlgorithm(DKIMAlgorithm algorithm) throws Exception {
+		this.rsa = new URsa();
+		this.rsa.setPrivateKey((RSAPrivateKey) this.privkey);
+		// 摘要算法
+		this.rsa.setDigestAlgorithm(algorithm.getJavaHashNotation());
+		// 签名算法
+		this.rsa.setSignAlgorithm(algorithm.getJavaSecNotation());
 
-		try {
-			this.messageDigest = MessageDigest.getInstance(signingAlgorithm.getJavaHashNotation());
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new DKIMSignerException(
-					"The hashing algorithm " + signingAlgorithm.getJavaHashNotation() + " is not known by the JVM",
-					nsae);
-		}
-
-		try {
-			this.signatureService = Signature.getInstance(signingAlgorithm.getJavaSecNotation());
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new DKIMSignerException(
-					"The signing algorithm " + signingAlgorithm.getJavaSecNotation() + " is not known by the JVM",
-					nsae);
-		}
-
-		try {
-			this.signatureService.initSign(privkey);
-		} catch (InvalidKeyException ike) {
-			throw new DKIMSignerException("The provided private key is invalid", ike);
-		}
-
-		this.signingAlgorithm = signingAlgorithm;
+		this.signingAlgorithm = algorithm;
 	}
 
+	/**
+	 * 序列号签名
+	 * 
+	 * @param dkimSignature
+	 * @return
+	 */
 	private String serializeDKIMSignature(Map<String, String> dkimSignature) {
 
 		Set<Entry<String, String>> entries = dkimSignature.entrySet();
@@ -318,6 +304,13 @@ public class DKIMSigner {
 		return buf.toString().trim();
 	}
 
+	/**
+	 * 折叠签名内容，不超过没行 67个字符
+	 * 
+	 * @param s      签名
+	 * @param offset 偏移量
+	 * @return
+	 */
 	private String foldSignedSignature(String s, int offset) {
 
 		int i = 0;
@@ -340,8 +333,15 @@ public class DKIMSigner {
 		return buf.toString();
 	}
 
-	@SuppressWarnings("unchecked")
-	public String sign(SMTPDKIMMessage message) throws DKIMSignerException, MessagingException {
+	/**
+	 * 签名邮件
+	 * 
+	 * @param message 邮件
+	 * @return 签名
+	 * @throws Exception
+	 * @throws MessagingException
+	 */
+	public String sign(SMTPDKIMMessage message) throws Exception {
 
 		Map<String, String> dkimSignature = new LinkedHashMap<String, String>();
 		dkimSignature.put("v", "1");
@@ -357,42 +357,87 @@ public class DKIMSigner {
 			dkimSignature.put("i", DKIMUtil.QuotedPrintable(identity));
 		}
 
-		// process header
-		ArrayList<String> assureHeaders = (ArrayList<String>) minimumHeadersToSign.clone();
+		StringBuffer headerContent = this.signHeader(message, dkimSignature);
+
+		this.signBody(message, dkimSignature);
+
+		// create signature
+		String serializedSignature = serializeDKIMSignature(dkimSignature);
+
+		byte[] signData = headerContent
+				.append(this.headerCanonicalization.canonicalizeHeader("DKIM-Signature", " " + serializedSignature))
+				.toString().getBytes();
+
+		String signedSignature = this.rsa.signBase64(signData);
+		// 折行
+		String foldedSign = this.foldSignedSignature(signedSignature, 3);
+		return "DKIM-Signature: " + serializedSignature + foldedSign;
+	}
+
+	private StringBuffer signHeader(SMTPDKIMMessage message, Map<String, String> dkimSignature) throws Exception {
+		// 获取最小的签名包含的字段列表
+		List<String> minimumHeders = new ArrayList<String>();
+		for (int i = 0; i < miniHeaders.length; i++) {
+			minimumHeders.add(miniHeaders[i].trim());
+		}
 
 		// intersect defaultHeadersToSign with available headers
 		StringBuffer headerList = new StringBuffer();
 		StringBuffer headerContent = new StringBuffer();
 		StringBuffer zParamString = new StringBuffer();
 
-		Enumeration<?> headerLines = message.getMatchingHeaderLines(defaultHeadersToSign);
+		// 获取指定名称的邮件头
+		Enumeration<String> headerLines = message.getMatchingHeaderLines(defaultHeadersToSign);
+		int inc = 0;
 		while (headerLines.hasMoreElements()) {
-			String header = (String) headerLines.nextElement();
-			String[] headerParts = DKIMUtil.splitHeader(header);
-			headerList.append(headerParts[0]).append(":");
-			headerContent.append(this.headerCanonicalization.canonicalizeHeader(headerParts[0], headerParts[1]))
-					.append("\r\n");
-			assureHeaders.remove(headerParts[0]);
+			String header = headerLines.nextElement();
 
+			String[] headerParts = DKIMUtil.splitHeader(header);
+			String name = headerParts[0];
+			String value = headerParts[1];
+
+			if (inc > 0) {
+				headerList.append(":");
+			}
+			headerList.append(name);
+
+			String canonicalizedHeader = this.headerCanonicalization.canonicalizeHeader(name, value);
+			headerContent.append(canonicalizedHeader).append("\r\n");
+
+			minimumHeders.remove(name);
 			// add optional z= header list, DKIM-Quoted-Printable
 			if (this.zParam) {
-				zParamString.append(headerParts[0]).append(":")
-						.append(DKIMUtil.QuotedPrintable(headerParts[1].trim()).replace("|", "=7C")).append("|");
+				zParamString.append("|");
+				String zv = DKIMUtil.QuotedPrintable(value.trim()).replace("|", "=7C");
+				zParamString.append(name).append(":").append(zv);
 			}
+			inc++;
 		}
 
-		if (!assureHeaders.isEmpty()) {
-			throw new DKIMSignerException(
-					"Could not find the header fields " + DKIMUtil.concatArray(assureHeaders, ", ") + " for signing");
+		if (!minimumHeders.isEmpty()) {
+			String err = "Could not find the header fields " + DKIMUtil.concatArray(minimumHeders, ", ")
+					+ " for signing";
+			throw new Exception(err);
 		}
 
-		dkimSignature.put("h", headerList.substring(0, headerList.length() - 1));
+		// h 参数，所有参与签名的头部
+		dkimSignature.put("h", headerList.toString());
 
 		if (this.zParam) {
-			String zParamTemp = zParamString.toString();
-			dkimSignature.put("z", zParamTemp.substring(0, zParamTemp.length() - 1));
+			dkimSignature.put("z", zParamString.toString());
 		}
 
+		return headerContent;
+	}
+
+	/**
+	 * 对邮件体进行签名, bh参数
+	 * 
+	 * @param message
+	 * @param dkimSignature
+	 * @throws Exception
+	 */
+	private void signBody(SMTPDKIMMessage message, Map<String, String> dkimSignature) throws Exception {
 		// process body
 		String body = message.getEncodedBody();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -400,37 +445,19 @@ public class DKIMSigner {
 		try {
 			crlfos.write(body.getBytes());
 		} catch (IOException e) {
-			throw new DKIMSignerException("The body conversion to MIME canonical CRLF line terminator failed", e);
+			throw new Exception("The body conversion to MIME canonical CRLF line terminator failed", e);
 		}
 		body = baos.toString();
 
-		try {
-			body = this.bodyCanonicalization.canonicalizeBody(body);
-		} catch (IOException ioe) {
-			throw new DKIMSignerException("The body canonicalization failed", ioe);
-		}
+		body = this.bodyCanonicalization.canonicalizeBody(body);
 
 		if (this.lengthParam) {
 			dkimSignature.put("l", body.length() + "");
 		}
 
+		String bh = UDigest.digestBase64(body.getBytes(), this.signingAlgorithm.getJavaHashNotation());
 		// calculate and encode body hash
-		dkimSignature.put("bh", DKIMUtil.base64Encode(this.messageDigest.digest(body.getBytes())));
+		dkimSignature.put("bh", bh);
 
-		// create signature
-		String serializedSignature = serializeDKIMSignature(dkimSignature);
-
-		byte[] signedSignature;
-		try {
-			signatureService.update(headerContent.append(
-					this.headerCanonicalization.canonicalizeHeader(DKIMSIGNATUREHEADER, " " + serializedSignature))
-					.toString().getBytes());
-			signedSignature = signatureService.sign();
-		} catch (SignatureException se) {
-			throw new DKIMSignerException("The signing operation by Java security failed", se);
-		}
-
-		return DKIMSIGNATUREHEADER + ": " + serializedSignature
-				+ foldSignedSignature(DKIMUtil.base64Encode(signedSignature), 3);
 	}
 }

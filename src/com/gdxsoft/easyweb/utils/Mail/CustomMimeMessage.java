@@ -1,8 +1,8 @@
 package com.gdxsoft.easyweb.utils.Mail;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 
 public class CustomMimeMessage extends MimeMessage {
 	private String oldMessageId;
@@ -14,7 +14,7 @@ public class CustomMimeMessage extends MimeMessage {
 	public CustomMimeMessage(Session session, java.io.InputStream is) throws MessagingException {
 		super(session, is);
 	}
-	 
+
 	@Override
 	protected void updateMessageID() throws MessagingException {
 		if (this.oldMessageId != null) {
@@ -32,8 +32,7 @@ public class CustomMimeMessage extends MimeMessage {
 	}
 
 	/**
-	 * @param oldMessageId
-	 *            the oldMessageId to set
+	 * @param oldMessageId the oldMessageId to set
 	 */
 	public void setOldMessageId(String oldMessageId) {
 		this.oldMessageId = oldMessageId;

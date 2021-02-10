@@ -1,21 +1,21 @@
 package com.gdxsoft.easyweb.utils;
 
 import java.io.IOException;
-
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 
 /**
  * 模仿.net Convert
+ * 
  * @author admin
  *
  */
 public class UConvert {
 	public static byte[] FromBase64String(String s) throws IOException {
-		return Base64.decodeBase64(s);
+		return Base64.getDecoder().decode(s);
 	}
 
 	public static String ToBase64String(byte[] inArray) {
-		return Base64.encodeBase64String(inArray);
+		return Base64.getEncoder().encodeToString(inArray);
 	}
 
 	public static String ToBase64String(byte[] inArray, int offset, int length) {
@@ -150,8 +150,8 @@ public class UConvert {
 		return String.valueOf(value).charAt(0);
 	}
 
-	//    
-	//    
+	//
+	//
 	// public static Date ToDate(boolean value)
 	// {
 	// return ((IConvertible) value).ToDate(null);
@@ -206,7 +206,7 @@ public class UConvert {
 	// return Date.MinValue;
 	// }
 	//
-	//    
+	//
 	// public static Date ToDate(sbyte value)
 	// {
 	// return ((IConvertible) value).ToDate(null);
@@ -226,19 +226,19 @@ public class UConvert {
 	// return Date.Parse(value, CultureInfo.CurrentCulture);
 	// }
 	//
-	//    
+	//
 	// public static Date ToDate(ushort value)
 	// {
 	// return ((IConvertible) value).ToDate(null);
 	// }
 	//
-	//    
+	//
 	// public static Date ToDate(uint value)
 	// {
 	// return ((IConvertible) value).ToDate(null);
 	// }
 	//
-	//    
+	//
 	// public static Date ToDate(ulong value)
 	// {
 	// return ((IConvertible) value).ToDate(null);
@@ -420,7 +420,7 @@ public class UConvert {
 		if (value == null) {
 			return 0;
 		}
-		String val1=value.split("\\.")[0];
+		String val1 = value.split("\\.")[0];
 		return Integer.parseInt(val1, fromBase);
 	}
 
@@ -519,16 +519,16 @@ public class UConvert {
 	}
 
 	public static String ToString(double value) {
-		String s1=String.valueOf(value);
-		String[] s2=s1.split("\\.");
-		if(s2.length>0){
-			int p=ToInt32(s2[1]);
-			if(p==0){
+		String s1 = String.valueOf(value);
+		String[] s2 = s1.split("\\.");
+		if (s2.length > 0) {
+			int p = ToInt32(s2[1]);
+			if (p == 0) {
 				return s2[0];
-			}else{
+			} else {
 				return s1;
 			}
-		}else{
+		} else {
 			return s1;
 		}
 	}

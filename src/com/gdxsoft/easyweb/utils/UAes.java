@@ -42,8 +42,7 @@ public class UAes {
 	private String method; // aes transformation 加密模式
 
 	static {
-		// 如果是PKCS7Padding填充方式，则必须加上下面这行
-		Security.addProvider(new BouncyCastleProvider());
+		new URsa();
 	}
 
 	/**

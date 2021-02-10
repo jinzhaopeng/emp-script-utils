@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -214,47 +216,32 @@ public class UFile {
 	 * 
 	 * @param path 文件路径
 	 * @return 文件二进制
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public static byte[] readFileBytes(String path) throws Exception {
+	public static byte[] readFileBytes(String path) throws IOException {
 		File file = new File(path);
 		if (file.exists()) { // 按照文件读取
-			FileInputStream fi = null;
-			try {
-				fi = new FileInputStream(path);
-				byte[] b = new byte[fi.available()];
-				fi.read(b);
-				return b;
-			} catch (Exception e) {
-				throw e;
-			} finally {
-				if (fi != null) {
-					try {
-						fi.close();
-					} catch (IOException e) {
-						System.err.println(e.toString());
-					}
-				}
-			}
-		} else { // 从jar包中读取
-			InputStream f = null;
-			try {
-				f = UFile.class.getResourceAsStream(path);
-				byte[] b = new byte[f.available()];
-				f.read(b);
-				return b;
-			} catch (Exception err) {
-				throw err;
-			} finally {
-				if (f != null) {
-					try {
-						f.close();
-					} catch (IOException e) {
-						System.err.println(e.toString());
-					}
+			return Files.readAllBytes(Paths.get(path));
+		}
+		// 从jar包中读取
+		InputStream f = null;
+		try {
+			f = UFile.class.getResourceAsStream(path);
+			byte[] b = new byte[f.available()];
+			f.read(b);
+			return b;
+		} catch (Exception err) {
+			throw err;
+		} finally {
+			if (f != null) {
+				try {
+					f.close();
+				} catch (IOException e) {
+					System.err.println(e.toString());
 				}
 			}
 		}
+
 	}
 
 	/**

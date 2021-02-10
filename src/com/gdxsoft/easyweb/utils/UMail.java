@@ -3,11 +3,11 @@ package com.gdxsoft.easyweb.utils;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,11 +194,15 @@ public class UMail {
 	 * @return DKIMCfg
 	 */
 	public static DKIMCfg getDKIMCfgByEmail(String email) {
-		if (UPath.getDKIM_CFGS().size() == 0) {
+		try {
+			if (UPath.getDKIM_CFGS().size() == 0) {
+				return null;
+			}
+			String domain = getEmailDomain(email);
+			return getDKIMCfgByDomain(domain);
+		} catch (Exception err) {
 			return null;
 		}
-		String domain = getEmailDomain(email);
-		return getDKIMCfgByDomain(domain);
 	}
 
 	/**

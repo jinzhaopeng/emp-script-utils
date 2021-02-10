@@ -2,8 +2,6 @@ package com.gdxsoft.easyweb.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +19,7 @@ import java.util.regex.Pattern;
 
 import com.gdxsoft.easyweb.utils.msnet.MListStr;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,35 +241,55 @@ public class Utils {
 	}
 
 	/**
-	 * sha1 摘要
+	 * 同 sha1， sha1 摘要
 	 * 
 	 * @param s1 原始字符
-	 * @return sha1 摘要
+	 * @return sha1 摘要(HEX)
 	 */
+	@Deprecated
 	public static String createEncryptString(String s1) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-1");
-			md.update(s1.getBytes());
-			return byte2hex(md.digest());
-		} catch (NoSuchAlgorithmException e) {
-			return e.getMessage();
-		}
+		/*
+		 * try { MessageDigest md = MessageDigest.getInstance("SHA-1");
+		 * md.update(s1.getBytes()); return byte2hex(md.digest()); } catch
+		 * (NoSuchAlgorithmException e) { return e.getMessage(); }
+		 */
+		String hex = UDigest.digestHex(s1, "sha1");
+		return hex;
+	}
+
+	/**
+	 * 取bytes的 sha1 摘要
+	 * 
+	 * @param bytes 二进制数组
+	 * @return sha1 摘要(HEX)
+	 */
+	public static String sha1(byte[] bytes) {
+		String hex = UDigest.digestHex(bytes, "sha1");
+		return hex;
+
+	}
+
+	/**
+	 * 取str的 sha1 摘要
+	 * 
+	 * @param str 字符串
+	 * @return sha1 摘要(HEX)
+	 */
+	public static String sha1(String str) {
+		String hex = UDigest.digestHex(str, "sha1");
+		return hex;
+
 	}
 
 	/**
 	 * 取bytes的md5摘要
 	 * 
 	 * @param bytes 二进制数组
-	 * @return md5摘要
+	 * @return md5摘要(HEX)
 	 */
 	public static String md5(byte[] bytes) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(bytes);
-			return byte2hex(md.digest());
-		} catch (NoSuchAlgorithmException e) {
-			return e.getMessage();
-		}
+		String hex = UDigest.digestHex(bytes, "md5");
+		return hex;
 
 	}
 
@@ -278,15 +297,11 @@ public class Utils {
 	 * 取str的md5摘要
 	 * 
 	 * @param str 字符串
-	 * @return md5摘要
+	 * @return md5摘要(HEX)
 	 */
 	public static String md5(String str) {
-		try {
-			byte[] buf = str.getBytes("utf-8");
-			return md5(buf);
-		} catch (UnsupportedEncodingException e) {
-			return e.toString();
-		}
+		String hex = UDigest.digestHex(str, "md5");
+		return hex;
 
 	}
 
@@ -296,17 +311,20 @@ public class Utils {
 	 * @param b byte数组
 	 * @return 16进制字符串
 	 */
+	public static String bytes2hex(byte[] b) {
+		return Hex.toHexString(b);
+	}
+
+	/**
+	 * 拼写错误，请用 bytes2hex 将byte数组转换为16进制字符串
+	 * 
+	 * @param b byte数组
+	 * @return 16进制字符串
+	 */
+	@Deprecated
 	public static String byte2hex(byte[] b) {
-		String stmp = "";
-		StringBuilder sb = new StringBuilder();
-		for (int n = 0; n < b.length; n++) {
-			stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-			if (stmp.length() == 1)
-				sb.append("0" + stmp);
-			else
-				sb.append(stmp);
-		}
-		return sb.toString().toUpperCase();
+		return Hex.toHexString(b);
+
 	}
 
 	/**
@@ -316,16 +334,13 @@ public class Utils {
 	 * @return 二进制
 	 */
 	public static byte[] hex2bytes(String hexs) {
-		String stmp = "";
-		byte[] buf = new byte[hexs.length() / 2];
-		for (int n = 0; n < hexs.length() / 2; n++) {
-			int beginIndex = n * 2;
-			int endIndex = beginIndex + 2;
-			stmp = hexs.substring(beginIndex, endIndex);
-			byte b = Integer.decode("0x" + stmp).byteValue();
-			buf[n] = b;
-		}
-		return buf;
+		return Hex.decode(hexs);
+		/*
+		 * String stmp = ""; byte[] buf = new byte[hexs.length() / 2]; for (int n = 0; n
+		 * < hexs.length() / 2; n++) { int beginIndex = n * 2; int endIndex = beginIndex
+		 * + 2; stmp = hexs.substring(beginIndex, endIndex); byte b =
+		 * Integer.decode("0x" + stmp).byteValue(); buf[n] = b; } return buf;
+		 */
 	}
 
 	/**
