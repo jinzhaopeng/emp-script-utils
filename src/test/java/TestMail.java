@@ -38,12 +38,13 @@ public class TestMail extends TestBase {
 		cfg.setSelect("gdx");
 		cfg.setPrivateKeyPath("D:\\360Downloads\\Video\\oneworld.cc.pem");
 
-		SendMail sm = new SendMail().setFrom(username).addTo(username).setSubject("发送smtp邮件").setTextContent("发送smtp邮件")
+		super.captionLength("send mail to gdx1231@gmail.com");
+		SendMail sm = new SendMail().setFrom(username).addTo("gdx1231@gmail.com").setSubject("发送smtp邮件").setTextContent("发送smtp邮件")
 				.setDkim(cfg);
-		sm.dkimSign(sm.getMimeMessage());
 
 		sm.initProps(host, 25, username, password);
 		sm.send();
+		super.captionLength("send ok");
 
 		/*
 		 * super.printCaption("发送smtp邮件"); this.sendMail(host, username, password);

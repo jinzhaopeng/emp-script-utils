@@ -643,8 +643,9 @@ public class SendMail {
 		if (this.mimeMessage_ != null) {
 			return this.mimeMessage_;
 		}
-		MimeMessage mm = this.createMinMessage();
-		return mm;
+		
+		this.createMinMessage();
+		return this.mimeMessage_;
 	}
 
 	/**
@@ -789,6 +790,8 @@ public class SendMail {
 
 		try {
 			mm = this.dkimSign(mm);
+			this.mimeMessage_ = mm;
+			
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
@@ -818,7 +821,7 @@ public class SendMail {
 		MimeMessage mm;
 		try {
 			mm = this.getMimeMessage();
-		} catch (MessagingException e1) {
+		} catch (Exception e1) {
 			this.lastError = e1;
 			log.error(e1.getMessage());
 			return false;
